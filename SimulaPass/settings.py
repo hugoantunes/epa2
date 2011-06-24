@@ -145,4 +145,4 @@ LOGGING = {
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 TESTS_APPS = ('django_nose',)
-NOSE_ARGS = ['--quiet', "-s", '--nologcapture']
+NOSE_ARGS = ['--quiet', "-s", '--nologcapture', '--with-coverage','--cover-package=SimulaPass']
