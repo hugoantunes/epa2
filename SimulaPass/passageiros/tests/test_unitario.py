@@ -12,3 +12,13 @@ class TestUnitarioPassageiro(TestCase):
 		
 	def test_passageiros_deveria_ter_atirbutos_corretos(self):
 		passageiro = Passageiro()
+
+		assert hasattr(passageiro, 'nome')
+		assert hasattr(passageiro, 'tem_carro')
+		assert hasattr(passageiro, 'conforto_toleravel')
+	
+	def test_unicode_passageiro(self):
+	    passageiro = Passageiro()
+	    passageiro.nome = 'Hugo'
+
+	    assert 'Hugo' == passageiro.__unicode__()
