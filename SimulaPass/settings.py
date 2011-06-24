@@ -101,24 +101,12 @@ INSTALLED_APPS = (
 	'django.contrib.admin',
 	
 	'south',
-	'testutils',
 	'passageiros',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
 
-EXCLUDE_TEST_APPS = (
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.sites',
-	'django.contrib.messages',
-	'django.contrib.admin',
-
-	'south',
-	'testutils',
-)
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -142,3 +130,7 @@ LOGGING = {
         },
     }
 }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+TESTS_APPS = ('django_nose',)
+NOSE_ARGS = ['--quiet', "-s", '--nologcapture']
