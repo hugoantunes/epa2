@@ -12,4 +12,5 @@ class TestUnitarioPassageiro(TestCase):
 		pass
 		
 	def test_passageiros_deveria_ter_atirbutos_corretos(self):
+		import pdb;pdb.set_trace()
 		passageiro = Passageiro()
