@@ -114,6 +114,7 @@ INSTALLED_APPS = (
 	
 	'south',
 	'passageiros',
+	'transportes',
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -145,4 +146,4 @@ LOGGING = {
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 TESTS_APPS = ('django_nose',)
-NOSE_ARGS = ['--quiet', "-s", '--nologcapture', '--with-coverage','--cover-package=SimulaPass']
+NOSE_ARGS = ['--quiet', "-s", '--nologcapture', '--with-coverage','--cover-package=passageiros,transportes,SimulaPass']
