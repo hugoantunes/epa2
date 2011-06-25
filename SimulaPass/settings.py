@@ -2,6 +2,7 @@
 # Django settings for SimulaPass project.
 
 import os.path
+PROJECT_ROOT = os.path.dirname(__file__)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -58,14 +59,9 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+MEDIA_URL = '/media/'
 
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -92,17 +88,11 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'SimulaPass.urls'
 
-# Para tornar o path do projeto de relativo
-PROJECT_ROOT = os.path.realpath(os.path.abspath(__file__))
-
-# Ele pegara todos os templates que está na pasta templates.
-os.path.join(PROJECT_ROOT,'templates')
-
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'templates'
+    os.path.join(PROJECT_ROOT, 'templates'),
 )
 INSTALLED_APPS = (
     'django.contrib.auth',
