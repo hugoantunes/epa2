@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
-	<title>home</title>
+	<title>Simulação</title>
 	<script src="/static/js/jquery1.6.1.js" type="text/javascript"></script>
 	<link href="/static/css/base.css" rel="stylesheet" type="text/css">
     <script>
         $(document).ready(function(){
-            $('input').click(function(){
-                $.ajax({
-                    url: "/ajax/",
-                    context: document.body,
-                    success: function(){
-                        console.log('terminou');
-                    }
-                });
+            $('#simular').click(function(){
+                var num_pessoas = $('#num_pessoas').val();
+                //console.log(num_pessoas)
+                while(num_pessoas > 0){
+                    $.ajax({
+                        url: "/ajax/"+num_pessoas+"/",
+                        context: document.body,
+                        success: function(data){
+                            console.log(data);
+                        }
+                    });
+                    num_pessoas--
+                    //console.log(num_pessoas)
+                }
             });
-        });
+            
+            
+        });//document.ready
     </script>
 </head>
 
 <body>
-    <input type="button" value="teste_ajax">
+    <fieldset>
+        <label >Numero de Pessoas </label>
+        <input type="text" name='num_pessoas' id='num_pessoas'>    
     
-    <h2>{{ passageiros }}</h2>
-    <h2>{{ transportes }}</h2>
+    </fieldset>
+    <input type="button" value="simular" id='simular'>
     
-    <h1>
     {% for transporte in transportes %}
-        <div id='{{transporte.nome}}'></div>
+        <div id='{{transporte.nome}}'>{{transporte.nome}}</div>
     {%endfor%}  
-    </h1>
 </body>
 
 </html>

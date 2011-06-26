@@ -5,12 +5,14 @@ from django.http import HttpResponse
 from passageiros.models import Passageiro
 from transportes.models import Transporte
 
+import time
+
 def home(request):
     template = u'index.html'
     
     passageiros = Passageiro.objects.all()
     transportes = Transporte.objects.all()
-
+    
     context = {'passageiros':passageiros,
             'transportes':transportes,
     }
@@ -18,5 +20,10 @@ def home(request):
 
     return render_to_response(template, context)
 
-def ajax(request):
-    return HttpResponse('foi no ajax')
+def ajax(request, numero):
+    
+    if int(numero)%2 ==0:
+        time.sleep(10);
+        return HttpResponse('par')
+    time.sleep(5)
+    return HttpResponse('impar')

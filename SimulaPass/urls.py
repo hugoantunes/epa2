@@ -8,7 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^simulacao/$', 'SimulaPass.views.home', name='home'),
-	url(r'^ajax/$', 'SimulaPass.views.ajax', name='home'),
+	url(r'^ajax/(?P<numero>\d+)/$', 'SimulaPass.views.ajax'),
 	
 	url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
       {'document_root':settings.MEDIA_ROOT}
