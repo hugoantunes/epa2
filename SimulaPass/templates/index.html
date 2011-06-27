@@ -6,12 +6,13 @@
 	<link href="/static/css/base.css" rel="stylesheet" type="text/css">
     <script>
         $(document).ready(function(){
+            var teste = $.parseJSON({{json_passageiro}})
+            console.log(teste)
             $('#simular').click(function(){
                 var num_pessoas = $('#num_pessoas').val();
                 var MyWorkers = [];
                 var objeto = []
                 var i = 0;
-
                 while(num_pessoas > 0){
 
                     MyWorkers[i] = new Worker('/static/js/passageiro.js');
@@ -37,6 +38,8 @@
     
     </fieldset>
     <input type="button" value="simular" id='simular'>
+    
+    {{json_passageiro}}
     
     {% for transporte in transportes %}
         <div id='{{transporte.nome}}'>{{transporte.nome}}</div>
