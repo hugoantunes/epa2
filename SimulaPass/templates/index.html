@@ -6,26 +6,10 @@
 	<link href="/static/css/base.css" rel="stylesheet" type="text/css">
     <script>
         $(document).ready(function(){
-            var teste = $.parseJSON({{json_passageiro}})
-            console.log(teste)
+            //var teste = $.parseJSON({{json_passageiro}})
+            //console.log(teste)
             $('#simular').click(function(){
                 var num_pessoas = $('#num_pessoas').val();
-                var MyWorkers = [];
-                var objeto = []
-                var i = 0;
-                while(num_pessoas > 0){
-
-                    MyWorkers[i] = new Worker('/static/js/passageiro.js');
-                    objeto[i] = {nome:'Hugo-'+i+''}
-
-                    MyWorkers[i].onmessage=function(event){
-                        console.log(event.data.nome);
-                        this.terminate()
-                    }
-                    MyWorkers[i].postMessage(objeto[i]);
-                    i++;
-                    num_pessoas--
-                }//While
             });
         });//document.ready
     </script>
