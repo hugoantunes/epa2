@@ -50,17 +50,25 @@ def ajax(request, numero):
             indice = 0
         
         passageiro_modelo = passageiros[indice]
-        #import ipdb;ipdb.set_trace()
+        
         for transporte in transportes:
             if transporte.capacidade_atual<transporte.capacidade_maxima:                
-                lista_transportes.append(transporte.capacidade_atual*transporte.coeficiente_conforto)
+                desconforto_transporte = transporte.capacidade_atual*transporte.coeficiente_conforto
+                lista_transportes.append(desconforto_transporte)
+                
+                if desconforto_transporte < passageiro_modelo.conforto_toleravel and not transporte_modelo.nome:
+                    transporte_modelo = transporte
+                    transporte.capacidade_atual+=1
+                    embarcou = 1
             else:
                 lista_transportes.append('')
+                embarcou = 0
 
-        if lista_transportes:
-            transporte_modelo = transportes[lista_transportes.index(min(lista_transportes))]
-            transportes[lista_transportes.index(min(lista_transportes))].capacidade_atual+=1
-            embarcou = 1
+        if lista_transportes and not embarcou:
+            if min(lista_transportes) != '':
+                transporte_modelo = transportes[lista_transportes.index(min(lista_transportes))]
+                transportes[lista_transportes.index(min(lista_transportes))].capacidade_atual+=1
+                embarcou = 1
         
         json['passageiros'].append({
             'tipo':passageiro_modelo.nome,
