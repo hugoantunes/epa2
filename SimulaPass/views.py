@@ -1,6 +1,4 @@
 # encoding: utf-8
-import time
-
 from django.utils import simplejson
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
@@ -8,7 +6,7 @@ from django.http import HttpResponse
 from passageiros.models import Passageiro
 from transportes.models import Transporte
 
-
+import random
 
 def home(request):
     template = u'index.html'
@@ -34,8 +32,42 @@ def home(request):
 
 def ajax(request, numero):
     
-    if int(numero)%2 ==0:
-        time.sleep(10);
-        return HttpResponse('par')
-    time.sleep(5)
-    return HttpResponse('impar')
+    passageiros = Passageiro.objects.all()
+    transportes = Transporte.objects.all().order_by('tempo_viagem')
+    possibilidades_passageiros = len(passageiros)
+    
+    json={'passageiros':[]}
+
+    for i in range(int(numero)):
+        embarcou = 0
+        lista_transportes = []
+        passageiro_modelo = Passageiro()
+        transporte_modelo = Transporte()
+        
+        if possibilidades_passageiros > 0:
+            indice = random.randint(0,possibilidades_passageiros-1)
+        else:
+            indice = 0
+        
+        passageiro_modelo = passageiros[indice]
+        #import ipdb;ipdb.set_trace()
+        for transporte in transportes:
+            if transporte.capacidade_atual<transporte.capacidade_maxima:                
+                lista_transportes.append(transporte.capacidade_atual*transporte.coeficiente_conforto)
+            else:
+                lista_transportes.append('')
+
+        if lista_transportes:
+            transporte_modelo = transportes[lista_transportes.index(min(lista_transportes))]
+            transportes[lista_transportes.index(min(lista_transportes))].capacidade_atual+=1
+            embarcou = 1
+        
+        json['passageiros'].append({
+            'tipo':passageiro_modelo.nome,
+            'transporte':transporte_modelo.nome,
+            'embarcou':embarcou,   
+        })
+        
+    json = simplejson.dumps(json)
+    
+    return HttpResponse(json)

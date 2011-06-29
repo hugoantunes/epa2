@@ -10,6 +10,12 @@
             //console.log(teste)
             $('#simular').click(function(){
                 var num_pessoas = $('#num_pessoas').val();
+                $.ajax({
+                  url: '/ajax/'+num_pessoas+'/',
+                  success: function(data) {
+                    console.log(data);
+                  }
+                });
             });
         });//document.ready
     </script>
