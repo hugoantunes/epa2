@@ -7,3 +7,27 @@ div{
     display:block;
     position:relative;
 }
+.ambiente{
+    display:block;
+    position:relative;
+}
+
+.transporte{
+    border-radius: 18px;
+    float:right;
+    width: 160px;
+    margin-left: 375px;
+}
+
+.passageiro{
+    float:left;
+}
+
+.pessoa{
+    border:solid 1px black;
+    border-radius: 18px;
+    display:block;
+    width:30px;
+    height:30px;
+    position: absolute;
+}

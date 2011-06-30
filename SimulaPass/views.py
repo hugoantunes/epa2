@@ -31,7 +31,7 @@ def home(request):
     return render_to_response(template, context)
 
 def ajax(request, numero):
-    
+    #import ipdb;ipdb.set_trace()
     passageiros = Passageiro.objects.all()
     transportes = Transporte.objects.all().order_by('tempo_viagem')
     possibilidades_passageiros = len(passageiros)
@@ -78,4 +78,4 @@ def ajax(request, numero):
         
     json = simplejson.dumps(json)
     
-    return HttpResponse(json)
+    return HttpResponse(json, mimetype = 'application/json')
