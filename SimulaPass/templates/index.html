@@ -27,13 +27,15 @@
         function movimenta_passageiros(indice,qtd, obj){
             var i = indice + 1;
          //   console.log(qtd);
+            var tempo = parseInt(4000/qtd,10);
             if(indice<qtd){
                 if(obj.passageiros[indice].embarcou){
+                //console.log(obj.passageiros[indice].transporte);
                     $('#'+indice).animate({
                         left:$('.'+obj.passageiros[indice].transporte).offset().left,
-                        //top:$('.'+obj.passageiros[i].transporte).offset().top,
+                        top:$('.'+obj.passageiros[indice].transporte).offset().top,
                         opacity:"0",
-                    },500,function(){
+                    },tempo,function(){
                         movimenta_passageiros(i,qtd, obj);
                     });
                     setTimeout(function(){
@@ -43,12 +45,14 @@
                         $('.'+obj.passageiros[indice].transporte).find('#capacidade_atual').val(parseInt(atual)+1);
                         var transporte = $('.'+obj.passageiros[indice].transporte);
                         trata_status_transporte(transporte);
-                    },500);
+                        //transporte.append('<p>'+obj.passageiros[indice].tipo+'</p>');
+                        
+                    },tempo);
                 }else{
                     setTimeout(function(){
                         $('#'+indice).css('background-color','red');
                         movimenta_passageiros(i,qtd, obj);
-                    },500);   
+                    },tempo);   
                 }
             }
         }
@@ -61,6 +65,7 @@
                 })
             }else{
                     $(transporte).addClass(trata_cor(transporte))
+                    
             }
         }
         
@@ -72,7 +77,7 @@
             
             if(max/2==atual){
                 return 'atencao';
-            }else if(max == atual){
+            }else if(max === atual){
                 return 'lotado';
             }else{
                 return 'livre';
@@ -117,7 +122,7 @@
             <fieldset class='transporte {{transporte.nome}}' id='{{transporte.nome}}'>
                 <legend>{{transporte.nome}}</legend>
                 <input type='hidden' id='capacidade_maxima' value={{transporte.capacidade_maxima}}>
-                <input type='hidden' id='capacidade_atual' value={{transporte.capacidade_atual}}>
+                <input type='text' readonly="readonly" id='capacidade_atual' value={{transporte.capacidade_atual}}>
             </fieldset>
         {%endfor%}
     </fieldset>
