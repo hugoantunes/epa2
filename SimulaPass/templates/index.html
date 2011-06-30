@@ -30,15 +30,17 @@
     <fieldset class='ambiente'>
         <legend>Ambiente</legend>
         {% for passageiro in passageiros %}
-            <div class='passageiro' id='{{passageiro.nome}}'>{{passageiro.nome}}<span class='pessoa'></span></div>
+            <fieldset class='passageiro' id='{{passageiro.nome}}'>
+                <legend>{{passageiro.nome}}</legend>
+            </fieldset>
         {%endfor%}
 
         {% for transporte in transportes %}
-            <div class='transporte' id='{{transporte.nome}}'>{{transporte.nome}}</div>
+            <fieldset class='transporte' id='{{transporte.nome}}'><legend>{{transporte.nome}}</legend></fieldset>
         {%endfor%}
     </fieldset>
     
- 
+ </span><span class='pessoa'></span>
 </body>
 
 </html>
