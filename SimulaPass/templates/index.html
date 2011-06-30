@@ -9,12 +9,49 @@
 	<link href="/static/css/base.css" rel="stylesheet" type="text/css">
 	
     <script>
+        var global = {}
+            
+        function limpa_simulacao(){
+            $('span').remove();
+        }
+        
+        function cria_passageiros(qtd, obj){
+           for(i=0;i<qtd;i++){
+               $('.'+obj.passageiros[i].tipo).append("<span class='pessoa' id="+i+"></span>")
+           }
+        }
+        
+        function movimenta_passageiros(qtd, obj){
+            for(i=0;i<  qtd;i++){
+                if(obj.passageiros[i].transporte){
+                    $('#'+i).animate({
+                        left:$('.'+obj.passageiros[i].transporte).offset().left,
+                        top:$('.'+obj.passageiros[i].transporte).offset().top,
+                        opacity:"0%"
+                    },2000);
+                }else{
+                    $('#'+i).css('background-color','red');
+                }
+                
+            }
+        }
+        
         $(document).ready(function(){
-            //var teste = $.parseJSON({{json_passageiro}})
-            //console.log(teste)
             $('#simular').click(function(){
+                limpa_simulacao();
                 var num_pessoas = $('#num_pessoas').val();
-                $.getJSON('/ajax/'+num_pessoas+'/', function(data){console.log(data);});
+                
+                $.getJSON('/ajax/'+num_pessoas+'/', function(data){
+                    //console.log(data);
+                    global = data;
+                    var qtd_pessoas = data.passageiros.length;
+
+                    cria_passageiros(qtd_pessoas,data);
+                    movimenta_passageiros(qtd_pessoas,data);
+                    
+
+                    //console.log(data.passageiros.length())
+                });
             });
         });//document.ready
     </script>
@@ -30,17 +67,16 @@
     <fieldset class='ambiente'>
         <legend>Ambiente</legend>
         {% for passageiro in passageiros %}
-            <fieldset class='passageiro' id='{{passageiro.nome}}'>
+            <fieldset class='passageiro {{passageiro.nome}}' id='{{passageiro.nome}}'>
                 <legend>{{passageiro.nome}}</legend>
             </fieldset>
         {%endfor%}
 
         {% for transporte in transportes %}
-            <fieldset class='transporte' id='{{transporte.nome}}'><legend>{{transporte.nome}}</legend></fieldset>
+            <fieldset class='transporte {{transporte.nome}}' id='{{transporte.nome}}'><legend>{{transporte.nome}}</legend></fieldset>
         {%endfor%}
     </fieldset>
     
- </span><span class='pessoa'></span>
 </body>
 
 </html>
