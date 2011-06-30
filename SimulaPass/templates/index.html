@@ -9,30 +9,73 @@
 	<link href="/static/css/base.css" rel="stylesheet" type="text/css">
 	
     <script>
-        var global = {}
+        var global = {};
             
         function limpa_simulacao(){
             $('span').remove();
+            $('.transporte').each(function(){
+                $(this).find('#capacidade_atual').val(0);
+            });
         }
         
         function cria_passageiros(qtd, obj){
            for(i=0;i<qtd;i++){
-               $('.'+obj.passageiros[i].tipo).append("<span class='pessoa' id="+i+"></span>")
+               $('.'+obj.passageiros[i].tipo).append("<span class='pessoa' id="+i+"></span>");
            }
         }
         
-        function movimenta_passageiros(qtd, obj){
-            for(i=0;i<  qtd;i++){
-                if(obj.passageiros[i].transporte){
-                    $('#'+i).animate({
-                        left:$('.'+obj.passageiros[i].transporte).offset().left,
-                        top:$('.'+obj.passageiros[i].transporte).offset().top,
-                        opacity:"0%"
-                    },2000);
+        function movimenta_passageiros(indice,qtd, obj){
+            var i = indice + 1;
+         //   console.log(qtd);
+            if(indice<qtd){
+                if(obj.passageiros[indice].embarcou){
+                    $('#'+indice).animate({
+                        left:$('.'+obj.passageiros[indice].transporte).offset().left,
+                        //top:$('.'+obj.passageiros[i].transporte).offset().top,
+                        opacity:"0",
+                    },500,function(){
+                        movimenta_passageiros(i,qtd, obj);
+                    });
+                    setTimeout(function(){
+             //           console.log(obj.passageiros[indice].transporte)
+               //         console.log(i)
+                        var atual = $('.'+obj.passageiros[indice].transporte).find('#capacidade_atual').val();
+                        $('.'+obj.passageiros[indice].transporte).find('#capacidade_atual').val(parseInt(atual)+1);
+                        var transporte = $('.'+obj.passageiros[indice].transporte);
+                        trata_status_transporte(transporte);
+                    },500);
                 }else{
-                    $('#'+i).css('background-color','red');
+                    setTimeout(function(){
+                        $('#'+indice).css('background-color','red');
+                        movimenta_passageiros(i,qtd, obj);
+                    },500);   
                 }
-                
+            }
+        }
+        
+        function trata_status_transporte(transporte){
+            //console.log(transporte);
+            if(!transporte){
+                $('.transporte').each(function(){
+                    $(this).addClass(trata_cor(this));
+                })
+            }else{
+                    $(transporte).addClass(trata_cor(transporte))
+            }
+        }
+        
+        function trata_cor(elemento){
+            max = $(elemento).find('#capacidade_maxima').val();
+            atual = $(elemento).find('#capacidade_atual').val();
+            
+            //console.log(max,atual)
+            
+            if(max/2==atual){
+                return 'atencao';
+            }else if(max == atual){
+                return 'lotado';
+            }else{
+                return 'livre';
             }
         }
         
@@ -42,15 +85,13 @@
                 var num_pessoas = $('#num_pessoas').val();
                 
                 $.getJSON('/ajax/'+num_pessoas+'/', function(data){
-                    //console.log(data);
-                    global = data;
+                  // console.log(data);
                     var qtd_pessoas = data.passageiros.length;
-
+                    var transporte = false;
                     cria_passageiros(qtd_pessoas,data);
-                    movimenta_passageiros(qtd_pessoas,data);
-                    
+                    trata_status_transporte(transporte);
+                    movimenta_passageiros(0,qtd_pessoas,data);
 
-                    //console.log(data.passageiros.length())
                 });
             });
         });//document.ready
@@ -73,7 +114,11 @@
         {%endfor%}
 
         {% for transporte in transportes %}
-            <fieldset class='transporte {{transporte.nome}}' id='{{transporte.nome}}'><legend>{{transporte.nome}}</legend></fieldset>
+            <fieldset class='transporte {{transporte.nome}}' id='{{transporte.nome}}'>
+                <legend>{{transporte.nome}}</legend>
+                <input type='hidden' id='capacidade_maxima' value={{transporte.capacidade_maxima}}>
+                <input type='hidden' id='capacidade_atual' value={{transporte.capacidade_atual}}>
+            </fieldset>
         {%endfor%}
     </fieldset>
     

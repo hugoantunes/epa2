@@ -42,3 +42,15 @@ div{
 fieldset.transporte{
     height: 40px;
 }
+
+.livre{
+    background-color:#7CFC00;
+}
+
+.atencao{
+    background-color:#FFFF00;
+}
+
+.lotado{
+    background-color:#FF0000;    
+}
