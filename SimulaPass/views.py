@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from passageiros.models import Passageiro
 from transportes.models import Transporte
 
+import time
 import random
 
 def home(request):
@@ -79,3 +80,24 @@ def ajax(request, numero):
     json = simplejson.dumps(json)
     
     return HttpResponse(json, mimetype = 'application/json')
+
+def posiciona_passageiro(request,numero):
+
+    if int(numero)%2 ==0:
+        resultado = 'par'
+    else:
+        resultado = 'impar'
+
+    return HttpResponse('ajax ---- %s é %s'%(str(numero),resultado))
+
+
+def posiciona_transporte(request):
+
+    return HttpResponse('ajax2')
+
+def teste(request):
+    template = u'simula.html'
+    context = {'request':request}
+
+    return render_to_response(template, context)
+

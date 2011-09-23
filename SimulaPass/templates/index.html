@@ -90,7 +90,7 @@
                 var num_pessoas = $('#num_pessoas').val();
                 
                 $.getJSON('/ajax/'+num_pessoas+'/', function(data){
-                  // console.log(data);
+                    console.log(data);
                     var qtd_pessoas = data.passageiros.length;
                     var transporte = false;
                     cria_passageiros(qtd_pessoas,data);
