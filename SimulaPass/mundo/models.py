@@ -7,9 +7,9 @@ class Mundo(models.Model):
     permite_carros = models.BooleanField()    
 
 class Quadrante(models.Model):
-    mundo = models.ForeignKey(Mundo, related_name='quadrante')
+    mundo = models.ForeignKey(Mundo, related_name='quadrantes')
     percentual_pessoas = models.CharField(max_length=255)
-    percentual_trnasportes = models.CharField(max_length=255)
+    percentual_transportes = models.CharField(max_length=255)
     permite_carros = models.BooleanField()
 
     def __unicode__(self):

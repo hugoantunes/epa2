@@ -2,6 +2,7 @@ div.mundo{
     width:62%;
     height:226px;
     float:left;
+    margin-left: 3px;
 }
 
 div.quadrante{
@@ -83,7 +84,7 @@ span#passageiro_teste2{
     position:absolute;
     right:15px;
     top:290px;
-
+}
 span#passageiro_teste3{
     border-radius: 18px;
     width:10px;
@@ -128,7 +129,7 @@ span#passageiro_teste7{
     position:absolute;
     right:15px;
     top:15px;
-}}
+}
 span.cenario-calcada{
     border: solid red;
     position: absolute;

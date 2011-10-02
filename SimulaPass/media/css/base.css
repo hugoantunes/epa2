@@ -7,6 +7,9 @@ div{
     display:block;
     position:relative;
 }
+input[type=text]{
+    width: 50px;
+}
 #simular{
     height: 64px;
     width: 100px;

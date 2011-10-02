@@ -1,13 +1,35 @@
 # encoding: utf-8
+import time
+import random
+
 from django.utils import simplejson
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 
 from passageiros.models import Passageiro
 from transportes.models import Transporte
+from mundo.models import Mundo, Quadrante
+from mega_evento.models import MegaEvento
 
-import time
-import random
+def teste(request):
+    template = u'simula.html'
+    
+    passageiros = Passageiro.objects.all()
+    transportes = Transporte.objects.all()
+    mundo = Mundo.objects.all()[0]
+    mega_evento = MegaEvento.objects.all()[0]
+    total_pessoas = int(mundo.qtd_pessoas) + int(mega_evento.qtd_pessoas_esperadas)
+
+    context = {'request': request,
+            'passageiros': passageiros,
+            'transportes': transportes,
+            'mundo': mundo,
+            'quadrantes': mundo.quadrantes.all(),
+            'mega_evento': mega_evento,
+            'total_pessoas': total_pessoas            
+    }
+    
+    return render_to_response(template, context)
 
 def home(request):
     template = u'index.html'
@@ -94,10 +116,3 @@ def posiciona_passageiro(request,numero):
 def posiciona_transporte(request):
 
     return HttpResponse('ajax2')
-
-def teste(request):
-    template = u'simula.html'
-    context = {'request':request}
-
-    return render_to_response(template, context)
-
