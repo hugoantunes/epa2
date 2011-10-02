@@ -1,0 +1,139 @@
+div.mundo{
+    width:62%;
+    height:226px;
+    float:left;
+}
+
+div.quadrante{
+    display: inline-block;
+    position: absolute;
+    border: gray solid;
+    width: 280px;
+    height: 5px;
+    margin: 30px;
+    background-color: grey;
+}
+
+div.primeiro{
+    top: 0px;
+    right: 0px;
+}
+
+div.segundo{
+    top: 0px;
+    left: 0px;
+}
+
+div.terceiro{
+    bottom: 0px;
+    right: 0px;
+}
+
+div.quarto{
+    bottom: 0px;
+    left: 0px;
+}
+
+span.obj{
+    position:absolute;
+}
+
+span.obj_q1{
+    right:0px;
+    top:15px;
+}
+
+span.obj_q2{
+    right:840px;
+    top:15px;
+}
+
+span.obj_q3{
+    right:840px;
+    top:290px;
+}
+
+span.obj_q4{
+    right:15px;
+    top:290px;
+}
+
+span#transporte{
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    background-color:red;
+}
+
+span#passageiro_teste1{
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    background-color:red;
+    position:absolute;
+    right:15px;
+    top:290px;
+}
+
+span#passageiro_teste2{
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    background-color:red;
+    position:absolute;
+    right:15px;
+    top:290px;
+
+span#passageiro_teste3{
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    background-color:red;
+    position:absolute;
+    right:15px;
+    top:290px;
+}
+span#passageiro_teste4{
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    background-color:red;
+    position:absolute;
+    right:15px;
+    top:290px;
+}
+span#passageiro_teste5{
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    background-color:red;
+    position:absolute;
+    right:15px;
+    top:290px;
+}
+span#passageiro_teste6{
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    background-color:red;
+    position:absolute;
+    right:15px;
+    top:15px;
+}
+span#passageiro_teste7{
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    background-color:red;
+    position:absolute;
+    right:15px;
+    top:15px;
+}}
+span.cenario-calcada{
+    border: solid red;
+    position: absolute;
+    left: 30px;
+    top: 121px;
+    height: 58px;
+    width: 795px;
+}
