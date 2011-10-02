@@ -107,6 +107,7 @@ INSTALLED_APPS = (
 	'passageiros',
 	'transportes',
     'mundo',
+    'mega_evento'
 
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
