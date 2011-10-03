@@ -26,7 +26,7 @@
                 console.log('clicou');
                 var num_pessoas = $('#num_pessoas').val();
                 $.ajax({
-                    url: '/ajax_alpha/'+i+'/',
+                    url: '/ajax/'+num_pessoas+'/',
                     success: function(data) {
                         console.log(data);
                     }
@@ -62,7 +62,6 @@
         </div>
         <div class='segundo quadrante'>
         </div>
-        <span class='cenario-calcada'></span>
         <div class='terceiro quadrante'>
         </div>
         <div class='quarto quadrante'>
