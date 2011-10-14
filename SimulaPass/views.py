@@ -8,7 +8,7 @@ from django.http import HttpResponse
 
 from passageiros.models import Passageiro
 from transportes.models import Transporte
-from mundo.models import Mundo, Quadrante
+from mundo.models import Mundo
 from mega_evento.models import MegaEvento
 
 def teste(request):
@@ -17,8 +17,15 @@ def teste(request):
     passageiros = Passageiro.objects.all()
     transportes = Transporte.objects.all()
     mundo = Mundo.objects.all()[0]
-    mega_evento = MegaEvento.objects.all()[0]
-    total_pessoas = int(mundo.qtd_pessoas) + int(mega_evento.qtd_pessoas_esperadas)
+    mega_evento = qtd_pessoas_esperadas = None
+
+    try:
+        mega_evento = MegaEvento.objects.all()[0]
+        qtd_pessoas_esperadas = mega_evento.qtd_pessoas_esperadas 
+    except:
+        pass
+
+    total_pessoas = int(mundo.qtd_pessoas) + int(qtd_pessoas_esperadas or 0)
 
     context = {'request': request,
             'passageiros': passageiros,
