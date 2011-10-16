@@ -11,20 +11,33 @@
             </fieldset> 
             <fieldset class="transportes" id="transportes_q{{quadrante.id}}">
                 <legend>transportes do quadrante {{quadrante.id}}</legend>
-
                 <div id="container">
                    {% for transporte in transportes %}
+                        <div class="box-wrap">
+                            <div class="box1"></div>
+                            <div class="box2"></div>
+                            <div class="box3"></div>
+                            <div class="box4"></div>
+                            <div class="target" style="left:{{transporte.porcentagem_maxima_confortavel}}px"></div>
+                            <div class="actual" style="width: {{transporte.porcentagem_atual_de_passageiros}}%"></div>
+                            <div class="mylabel">{{ transporte.nome }}</div>
+                        </div>
+                        {% if not forloop.last %}<p></p>{% endif %}
+                    {% endfor %}
+
+                    {% if quadrante.permite_carros and quadrante.mundo.permite_carros %}
+                        <p></p>
+                        <div class="box-wrap">
+                            <div class="box1"></div>
+                            <div class="box2"></div>
+                            <div class="box3"></div>
+                            <div class="box4"></div>
+                            <div class="actual" style="width:0%"></div>
+                            <div class="mylabel">Carros</div>
+                        </div>
+                   {% endif %}
+
                     <div class="box-wrap">
-                        <div class="box1"></div>
-                        <div class="box2"></div>
-                        <div class="box3"></div>
-                        <div class="box4"></div>
-                        <div class="target" style="left:{{transporte.porcentagem_maxima_confortavel}}px"></div>
-                        <div class="actual" style="width: {{transporte.porcentagem_atual_de_passageiros}}%"></div>
-                        <div class="mylabel">{{ transporte.nome }}</div>
-                     </div>
-                     {% endfor %}
-                     <div class="box-wrap">
                         <div class="cap21">0%</div>
                         <div class="cap22">25%</div>
                         <div class="cap23">50%</div>
@@ -42,8 +55,6 @@
                         </div>
                     </div>
                 </div><!-- container -->
-
-
            </fieldset>
            
        {%endif%} 
