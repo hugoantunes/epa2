@@ -1,0 +1,33 @@
+    <h3>Transportes x Transportes</h3>
+    <div class='mundo'>
+        <div class='primeiro quadrante'>
+        </div>
+        <div class='segundo quadrante'>
+        </div>
+        <div class='terceiro quadrante'>
+        </div>
+        <div class='quarto quadrante'>
+        </div>
+        <!--
+        <span id="passageiro_teste1"></span>
+        <span id="passageiro_teste2"></span>
+        <span id="passageiro_teste3"></span>
+        <span id="passageiro_teste4"></span>
+        <span id="passageiro_teste5"></span>
+        <span id="passageiro_teste6"></span>
+        <span id="passageiro_teste7"></span>
+        <span id="passageiro_teste8"></span>
+        <span id="passageiro_teste9"></span>
+        -->
+    </div>
+
+   {% for quadrante in quadrantes %}
+   <fieldset>
+       <legend>Quadrante {{quadrante.id}}</legend>
+       Pessoas: <input type="text" name='percent_pes' id='percent_pes_q{{quadrante.id}}' value='{{quadrante.percentual_pessoas}}'>%
+       <br/>
+       Transportes: <input type="text" name='percent' id='percent_trans_q{{quadrante.id}}' value='{{quadrante.percentual_transportes}}'>%    
+       <br/>
+       Permite Carro: <input type="checkbox" name='permite_carro' id='percent_trans_q{{quadrante.id}}' {%if quadrante.permite_carros%}checked{%endif%}>   
+    </fieldset>
+   {% endfor %}

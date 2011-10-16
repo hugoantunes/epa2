@@ -14,3 +14,8 @@ class Quadrante(models.Model):
 
     def __unicode__(self):
         return 'quadrante%d_mundo%d'%(self.id, self.mundo.id)
+
+    @property
+    def passageiros_do_quadrante(self):
+        return int(float(self.mundo.qtd_pessoas)*float(self.percentual_pessoas)/100)
+        

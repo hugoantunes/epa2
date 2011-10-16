@@ -14,11 +14,9 @@ class Transporte(models.Model, threading.Thread):
 
     @property
     def porcentagem_atual_de_passageiros(self):
-        percentual = int(float(self.capacidade_atual)/float(self.capacidade_maxima)*100)
-        return percentual
+        return int(float(self.capacidade_atual)/float(self.capacidade_maxima)*100)
     
     @property
     def porcentagem_maxima_confortavel(self):
         percentual = int(float(self.capacidade_confortavel)/float(self.capacidade_maxima)*100)
-        target = percentual*2
-        return target
+        return percentual*2

@@ -1,0 +1,53 @@
+    <h3>Passageiros x Transporte</h3>
+    <div class='ambiente_escolha'>
+       {% for quadrante in quadrantes %}
+       {% if quadrante.percentual_transportes != 0 %}
+           {% if not forloop.first %}<hr/>{%endif%}
+           
+           <fieldset class="passageiros" id="passageiros_q{{quadrante.id}}">
+               <legend>Passageiros do quadrante {{quadrante.id}}</legend>
+               passageiros desalocados: <input type="text" name=quadrante_passageiros_alocados" value={{quadrante.passageiros_do_quadrante}}> 
+               passageiros alocados: <input type="text" name="quandrante_passageiros_alocados">   
+            </fieldset> 
+            <fieldset class="transportes" id="transportes_q{{quadrante.id}}">
+                <legend>transportes do quadrante {{quadrante.id}}</legend>
+
+                <div id="container">
+                   {% for transporte in transportes %}
+                    <div class="box-wrap">
+                        <div class="box1"></div>
+                        <div class="box2"></div>
+                        <div class="box3"></div>
+                        <div class="box4"></div>
+                        <div class="target" style="left:{{transporte.porcentagem_maxima_confortavel}}px"></div>
+                        <div class="actual" style="width: {{transporte.porcentagem_atual_de_passageiros}}%"></div>
+                        <div class="mylabel">{{ transporte.nome }}</div>
+                     </div>
+                     {% endfor %}
+                     <div class="box-wrap">
+                        <div class="cap21">0%</div>
+                        <div class="cap22">25%</div>
+                        <div class="cap23">50%</div>
+                        <div class="cap24">75%</div>
+                        <div class="cap25">20%</div>
+                        <div class="cap26">100%</div>	
+
+                        <div class="scale-tb1">
+                            <div class="sc21"></div>
+                            <div class="sc22"></div>
+                            <div class="sc23"></div>
+                            <div class="sc24"></div>
+                            <div class="sc25"></div>
+                            <div class="sc26"></div>
+                        </div>
+                    </div>
+                </div><!-- container -->
+
+
+           </fieldset>
+           
+       {%endif%} 
+       {% endfor %}
+    </div>
+
+
