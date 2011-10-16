@@ -60,6 +60,7 @@
     <h3>Passageiros x Transporte</h3>
     <div class='ambiente_escolha'>
        {% for quadrante in quadrantes %}
+        {%if quandrante.percentual_transportes != "0" %}
        <fieldset class="passageiros">
            <legend>Passageiros do quadrante {{quadrante.id}}</legend>
            numero de passageiros: <input type="text">  
@@ -100,6 +101,7 @@
 
        </fieldset>
        <hr/>
+       {% endif %} 
        {% endfor %}
     </div>
 
