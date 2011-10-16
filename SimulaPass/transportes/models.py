@@ -7,7 +7,18 @@ class Transporte(models.Model, threading.Thread):
     tempo_viagem = models.FloatField()
     capacidade_maxima = models.IntegerField()
     capacidade_atual = models.IntegerField()
-    coeficiente_conforto = models.IntegerField()
+    capacidade_confortavel = models.IntegerField()
     
     def __unicode__(self):
         return self.nome
+
+    @property
+    def porcentagem_atual_de_passageiros(self):
+        percentual = int(float(self.capacidade_atual)/float(self.capacidade_maxima)*100)
+        return percentual
+    
+    @property
+    def porcentagem_maxima_confortavel(self):
+        percentual = int(float(self.capacidade_confortavel)/float(self.capacidade_maxima)*100)
+        target = percentual*2
+        return target

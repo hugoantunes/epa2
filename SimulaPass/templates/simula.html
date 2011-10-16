@@ -69,31 +69,15 @@
 
             <div id="container">
                 <div class="box-wrap">
+                    {% for transporte in transportes %}
                     <div class="box1"></div>
                     <div class="box2"></div>
                     <div class="box3"></div>
                     <div class="box4"></div>
-                    <div class="target"></div>
-                    <div class="actual" style="width: 37%"></div>
-                    <div class="mylabel">Client ABC</div>
-                </div>
-                <div class="box-wrap">
-                    <div class="box1"></div>
-                    <div class="box2"></div>
-                    <div class="box3"></div>
-                    <div class="box4"></div>
-                    <div class="target"></div>
-                    <div class="actual" style="width: 47%"></div>
-                    <div class="mylabel">Client KLM</div>
-                </div>
-                <div class="box-wrap">
-                    <div class="box1"></div>
-                    <div class="box2"></div>
-                    <div class="box3"></div>
-                    <div class="box4"></div>
-                    <div class="target"></div>
-                    <div class="actual" style="width: 57%"></div>
-                    <div class="mylabel">Client EFG</div>
+                    <div class="target" style="left:{{transporte.porcentagem_maxima_confortavel}}px"></div>
+                    <div class="actual" style="width: {{transporte.porcentagem_atual_de_passageiros}}%"></div>
+                    <div class="mylabel">{{ transporte.nome }}</div>
+                    {% endfor %}
 
                     <div class="cap21">0%</div>
                     <div class="cap22">25%</div>
