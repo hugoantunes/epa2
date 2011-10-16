@@ -1,9 +1,4 @@
 div{
-    border:solid 1px black;
-    width:40px;
-    /* height:17px; */
-    margin:10px;
-    padding:40px;
     display:block;
     position:relative;
 }

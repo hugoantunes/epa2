@@ -1,0 +1,98 @@
+h1 { font: 30pt Arial, sans-serif; padding: 10px 0 5px 0; width: 540px; margin: 0 auto 10px auto; border-bottom: 1px solid #8f8f8f; text-align: center; }
+p#contact { font: 10pt Arial, sans-serif; width: 398px; margin: 0 auto; padding-top: 7px; text-align: left; line-height: 140%; }
+a:link, a:visited, a:hover { color: rgb(32,108,223); font-weight: bold; text-decoration: none; }
+a:hover { color: #cc0000; font-weight: bold; }
+
+
+div#container { position: relative; margin-left: 70px; margin-bottom:40px; padding: 0; text-align: left; }
+
+/*	BULLET GRAPH */
+div.box-wrap { position: relative; width: 200px; height: 21px; top: 0; left: 0; margin: 0; padding: 0; }
+
+/*	CHANGE THE WIDTH AND BACKGROUND COLORS AS NEEDED */
+div.box1 { position: absolute; height: 20px; width: 30%; left: 0; background-color: #eeeeee; z-index: 1; font-size: 0; }
+div.box2 { position: absolute; height: 20px; width: 30%; left: 30%; background-color: #dddddd; z-index: 1; font-size: 0; }
+div.box3 { position: absolute; height: 20px; width: 30%; left: 60%; background-color: #bbbbbb; z-index: 1; font-size: 0; }
+div.box4 { position: absolute; height: 20px; width: 10%; left: 90%; background-color: #bbbbbb; z-index: 1; font-size: 0; }
+
+/* RED LINE */
+div.target { position: absolute; height: 20px; width: 1px; left: 32px; top: 0; background-color: #cc0000; z-index: 7; font-size: 0; }
+
+/* ONE SEGMENT ONLY */
+div.actual { position: absolute; height: 8px; left: 0px; top: 6px; background-color: #000000; font-size: 0; z-index: 5; font-size: 0; }
+
+/* TWO SEGMENTS */
+div.actualMAX { position: absolute; height: 8px; left: 0px; top: 6px; background-color: #70a1d8; font-size: 0; z-index: 5; font-size: 0; }
+div.actualPART { position: absolute; height: 8px; left: 0px; top: 6px; background-color: #0a50a1; font-size: 0; z-index: 5; font-size: 0; }
+
+div.mylabel 
+	{ 
+	position: relative; 
+	height: 20px; 
+	width: 145px; 
+	left: -155px; 
+	top: 2px; 
+	background-color: #fff; 
+	z-index: 7; 
+	font-size: 0;
+	color: #000000; 
+	font: 10pt Arial, sans-serif; 
+	text-align: right; 
+	}
+
+div.scale-tb1
+	{
+	padding: 0; 
+	margin: 0;
+	font-size: 0;
+	width: 200px;
+	border: 0;	
+	position: relative; 
+	top: 10px; 
+	left: 0px; 
+	border-top: 1px solid #8f8f8f; 
+	}
+
+div.scale-tb2
+	{
+	padding: 0; 
+	margin: 0;
+	font-size: 0;
+	width: 200px;
+	border: 0;	
+	position: relative; 
+	top: 0px; 
+	left: 0px; 
+	}
+
+/*	SCALE MARKS */
+div.sc21 { position: absolute; height: 7px; width: 1px; left: 0px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc22 { position: absolute; height: 7px; width: 1px; left: 49px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc23 { position: absolute; height: 7px; width: 1px; left: 99px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc24 { position: absolute; height: 7px; width: 1px; left: 150px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc25 { position: absolute; height: 7px; width: 1px; left: 159px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; display:none; }
+div.sc26 { position: absolute; height: 7px; width: 1px; left: 199px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+
+div.sc31 { position: absolute; height: 7px; width: 1px; left: 0px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc32 { position: absolute; height: 7px; width: 1px; left: 39px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc33 { position: absolute; height: 7px; width: 1px; left: 79px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc34 { position: absolute; height: 7px; width: 1px; left: 119px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc35 { position: absolute; height: 7px; width: 1px; left: 159px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+div.sc36 { position: absolute; height: 7px; width: 1px; left: 199px; top: 0px; background-color: #8f8f8f; z-index: 7; font-size: 0; }
+
+
+/*	SCALE TEXT */
+div.cap21 { position: absolute; top: 40px; left: -2px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap22 { position: absolute; top: 40px; left: 46px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap23 { position: absolute; top: 40px; left: 92px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap24 { position: absolute; top: 40px; left: 145px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap25 { position: absolute; top: 40px; left: 152px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; display:none;  }
+div.cap26 { position: absolute; top: 40px; left: 191px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+
+div.cap31 { position: absolute; top: 29px; left: -2px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap32 { position: absolute; top: 29px; left: 35px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap33 { position: absolute; top: 29px; left: 71px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap34 { position: absolute; top: 29px; left: 112px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap35 { position: absolute; top: 29px; left: 152px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+div.cap36 { position: absolute; top: 29px; left: 191px; width: 15px; font: 8pt Arial, sans-serif; text-align: center; color: #575757; }
+

@@ -11,6 +11,7 @@
     <link href="/static/js/jquery-ui-1.8.14.custom/css/ui-lightness/jquery-ui-1.8.14.custom.css" rel="stylesheet" type="text/css">
     <link href="/static/css/base.css" rel="stylesheet" type="text/css">
     <link href="/static/css/mundo.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/grafico_barra.css" rel="stylesheet" type="text/css">
     
     <script>
         $(document).ready(function(){
@@ -57,8 +58,67 @@
     </fieldset>
 
     <h3>Passageiros x Transporte</h3>
-    <div class='escolha'>
+    <div class='ambiente_escolha'>
+       {% for quadrante in quadrantes %}
+       <fieldset class="passageiros">
+           <legend>Passageiros do quadrante {{quadrante.id}}</legend>
+           numero de passageiros: <input type="text">  
+        </fieldset> 
+        <fieldset class="transportes">
+            <legend>transportes do quadrante {{quadrante.id}}</legend>
+
+            <div id="container">
+                <div class="box-wrap">
+                    <div class="box1"></div>
+                    <div class="box2"></div>
+                    <div class="box3"></div>
+                    <div class="box4"></div>
+                    <div class="target"></div>
+                    <div class="actual" style="width: 37%"></div>
+                    <div class="mylabel">Client ABC</div>
+                </div>
+                <div class="box-wrap">
+                    <div class="box1"></div>
+                    <div class="box2"></div>
+                    <div class="box3"></div>
+                    <div class="box4"></div>
+                    <div class="target"></div>
+                    <div class="actual" style="width: 47%"></div>
+                    <div class="mylabel">Client KLM</div>
+                </div>
+                <div class="box-wrap">
+                    <div class="box1"></div>
+                    <div class="box2"></div>
+                    <div class="box3"></div>
+                    <div class="box4"></div>
+                    <div class="target"></div>
+                    <div class="actual" style="width: 57%"></div>
+                    <div class="mylabel">Client EFG</div>
+
+                    <div class="cap21">0%</div>
+                    <div class="cap22">25%</div>
+                    <div class="cap23">50%</div>
+                    <div class="cap24">75%</div>
+                    <div class="cap25">20%</div>
+                    <div class="cap26">100%</div>	
+
+                    <div class="scale-tb1">
+                        <div class="sc21"></div>
+                        <div class="sc22"></div>
+                        <div class="sc23"></div>
+                        <div class="sc24"></div>
+                        <div class="sc25"></div>
+                        <div class="sc26"></div>
+                    </div>	
+                </div>
+            </div><!-- container -->
+
+
+       </fieldset>
+       <hr/>
+       {% endfor %}
     </div>
+
     <h3>Transportes x Transportes</h3>
     <div class='mundo'>
         <div class='primeiro quadrante'>
@@ -81,6 +141,7 @@
         <span id="passageiro_teste9"></span>
         -->
     </div>
+
    {% for quadrante in quadrantes %}
    <fieldset>
        <legend>Quadrante {{quadrante.id}}</legend>
@@ -91,6 +152,7 @@
        Permite Carro: <input type="checkbox" name='permite_carro' id='percent_trans_q{{quadrante.id}}' {%if quadrante.permite_carros%}checked{%endif%}>   
     </fieldset>
    {% endfor %}
+
 </body>
 
 </html>
