@@ -29,3 +29,11 @@ class Quadrante(models.Model):
         percentual = int(float(self.capacidade_confortavel)/float(self.capacidade_maxima)*100)
         return percentual*2 
 '''
+class Simulacao(models.Model):
+    mundo = models.ForeignKey(Mundo, related_name='simulacoes')
+    qtd_pessoas_usadas = models.IntegerField(max_length=255)
+    qtd_transportes_usados = models.IntegerField(max_length=255)
+    qtd_carros_usados = models.IntegerField(max_length=255)
+
+    def __unicode__(self):
+        return 'Simulacao: %d' %self.id

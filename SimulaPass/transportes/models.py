@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.db import models
 import threading
+
+from django.db import models
+
+from mundo.models import Quadrante, Simulacao
 
 class Transporte(models.Model, threading.Thread):
     nome =  models.CharField(max_length=90)
@@ -20,3 +23,15 @@ class Transporte(models.Model, threading.Thread):
     def porcentagem_maxima_confortavel(self):
         percentual = int(float(self.capacidade_confortavel)/float(self.capacidade_maxima)*100)
         return percentual*2
+
+class AgenteTransporte(models.Model, threading.Thread):
+    tipo_transporte = models.ForeignKey(Transporte, related_name='quadrantes_origens')
+    origem = models.ForeignKey(Quadrante, related_name='quadrantes_origens', blank=True, null=True)
+    destino = models.ForeignKey(Quadrante, related_name='quadrantes_destinos', blank=True, null=True)
+    simulacao = models.ForeignKey(Simulacao, related_name='transportes')
+    desconforto = models.IntegerField()
+    capacidade_atual = models.IntegerField() 
+    
+    def __unicode__(self):
+        return 'AgenteTransporte: %s-%d' % (self.tipo_transporte.nome,self.id)
+     

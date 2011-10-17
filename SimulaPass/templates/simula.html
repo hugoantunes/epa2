@@ -35,7 +35,7 @@
                 $.ajax({
                     type:'POST',
                     data: $("#my_form").serialize(),
-                    url: '/carros/'+qtd_carros_disponiveis+'/quadrante/'+1+'/',
+                    url: '/mundo/{{mundo.id}}/passageiro/transporte/quadrante/'+1+'/',
                     success: function(data) {
                         console.log(data);
                     }
@@ -60,13 +60,15 @@
         <label for="num_transportes">Quantidade de Transportes:</label>
         <br/>        
         <input type="text" name='num_transportes' id='num_transportes' value='{{ mundo.qtd_transportes }}'>
+        <input type="hidden" name='num_transportes_usados' id='num_transportes_usados'>
         <br/>
-        <label for="num_transportes">Quantidade de Carros:</label>
+        <label for="num_carros">Quantidade de Carros:</label>
         <br/>        
         <input type="text" name='num_carros' id='num_carros' value='{{ mundo.qtd_carros }}'>
+        <input type="hidden" name='num_carros_usados' id='num_carros_usados' >
 
         <br/><br/>
-        <label for="num_transportes">Nesse mundo a pessoas possuem carro ?</label>
+        <label for="permite_carros">Nesse mundo a pessoas possuem carro ?</label>
         <input type="checkbox" name='permite_carros' id='permite_carros_mundo'{%if mundo.permite_carros%}checked{%endif%} > 
 
         <input type="submit" value="simular" id='simular'>

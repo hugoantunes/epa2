@@ -7,12 +7,16 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
 
-from passageiros.models import Passageiro
-from transportes.models import Transporte
-from mundo.models import Mundo
+from passageiros.models import Passageiro, AgentePassageiro
+from transportes.models import Transporte, AgenteTransporte
+from mundo.models import Mundo, Simulacao
 from mega_evento.models import MegaEvento
 
 def teste(request):
+    Simulacao.objects.all().delete()
+    AgenteTransporte.objects.all().delete()
+    AgentePassageiro.objects.all().delete()
+
     template = u'simula.html'
     
     passageiros = Passageiro.objects.all()
@@ -39,6 +43,83 @@ def teste(request):
     
     return render_to_response(template, context, context_instance=RequestContext(request))
 
+def entra_no_transporte(request,id_mundo, id_quadrante):
+    json={'passageiros':[], 'transportes': []}
+    
+    mundo = Mundo.objects.get(id=id_mundo)
+    simulacao = Simulacao.objects.filter(mundo=mundo)
+    origem = mundo.quadrantes.get(id=id_quadrante)
+    destinos = mundo.quadrantes.all().exclude(id=id_quadrante)
+    destino = random.choice(destinos)
+ 
+    tipos_passageiros = Passageiro.objects.all()
+    tipo_passageiro_escolhido = random.choice(tipos_passageiros)
+    
+    if not len(simulacao):
+        simulacao = Simulacao.objects.create(
+            mundo=mundo,
+            qtd_pessoas_usadas=0,
+            qtd_transportes_usados=0,
+            qtd_carros_usados=0,
+            )
+    else:
+        simulacao = simulacao[0]
+
+    passageiro = AgentePassageiro.objects.create(
+            tipo_passageiro=tipos_passageiros[tipo_passageiro_escolhido],
+            conforto_atual=100,
+            simulacao=simulacao,
+            origem=origem,
+    )
+
+    json['passageiros'].append(passageiro)
+    
+    if request.POST: 
+        if mundo.qtd_transportes > simulacao.qtd_transportes_usados: 
+
+            transportes = Transporte.objects.all()            
+            lista_transportes = [] 
+
+            for transporte in transportes:
+                lista_transportes.append(transporte)
+            
+            if mundo.qtd_carros >= simulacao.qtd_carros_usados:
+                lista_transportes.append('carro')
+
+            import ipdb; ipdb.set_trace()
+            escolha = random.choice(lista_transportes)
+            escolha = 0            
+            if lista_transportes[escolha] == 'carro':
+                pass
+            else:
+                tipo_transporte_escolhido = transportes[escolha]
+                
+                if simulacao.transportes:
+                    transportes_escolhidos = simulacao.transportes.filter(tipo_transporte=tipo_transporte_escolhido, capacidade_atual__lte=tipo_transporte_escolhido.capacidade_maxima, desconforto__lte=passageiro.tipo_passageiro.conforto_toleravel)
+                    
+                    qtd_transportes_escolhidos = len(transportes_escolhidos)
+                    
+                    if qtd_transportes_escolhidos > 0:
+                        transporte = random.choice(transportes_escolhidos)
+                else:
+                    transporte = AgenteTransporte.objects.create(
+                            tipo_transporte = tipo_transporte_escolhido,
+                            simulacao=simulacao,
+                            origem=origem, 
+                            destino=destino,  
+                            capcidade_atual=0,
+                            desconforto=0,
+                            )
+                    
+                    passageiro.transporte = transporte
+                    passageiro.save()
+
+                    
+
+            json = simplejson.dumps(json)
+        
+    return HttpResponse(json, mimetype = 'application/json')
+
 def home(request):
     template = u'index.html'
     
@@ -62,7 +143,6 @@ def home(request):
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def ajax(request, numero):
-    #import ipdb;ipdb.set_trace()
     passageiros = Passageiro.objects.all()
     transportes = Transporte.objects.all().order_by('tempo_viagem')
     possibilidades_passageiros = len(passageiros)
@@ -111,25 +191,6 @@ def ajax(request, numero):
     
     return HttpResponse(json, mimetype = 'application/json')
 
-def entra_no_transporte(request, num_carros, id_quadrante):
-    transportes = Transporte.objects.all().order_by('tempo_viagem')
-    
-    lista_transportes = [] 
-
-    for transporte in transportes:
-        lista_transportes.append(transporte)
-
-    lista_transportes.append('carro')
-
-    possibilidades_maximas_de_transporte = len(lista_transportes)
-
-    escolha = random.randint(0, possibilidades_maximas_de_transporte-1)
-
-    import ipdb; ipdb.set_trace()
-    json={'passageiros':[]} 
-    json = simplejson.dumps(json)
-    
-    return HttpResponse(json, mimetype = 'application/json')
  
 def posiciona_passageiro(request,numero):
 

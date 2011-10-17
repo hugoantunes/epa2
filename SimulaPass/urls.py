@@ -15,10 +15,10 @@ urlpatterns = patterns('',
 	
 	url(r'^posiciona_passageiros/(?P<numero>\d+)/$', 'SimulaPass.views.posiciona_passageiro'),
 	url(r'^posiciona_transportes/(?P<numero>\d+)/$', 'SimulaPass.views.posiciona_transporte'),
-
-    url(r'^passageiros/(?P<num_passageiros>\d+)/carros/(?P<num_carros>\d+)/quadrante/(?P<id_quadrante>\d+)/$','SimulaPass.views.entra_no_transporte'),
-    url(r'^carros/(?P<num_carros>\d+)/quadrante/(?P<id_quadrante>\d+)/$','SimulaPass.views.entra_no_transporte'),
-	url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+    
+    url(r'^mundo/(?P<id_mundo>\d+)/passageiro/transporte/quadrante/(?P<id_quadrante>\d+)/$','SimulaPass.views.entra_no_transporte'),
+	
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
       {'document_root':settings.MEDIA_ROOT}
     ),
 )
