@@ -5,15 +5,15 @@
            {% if not forloop.first %}<hr/>{%endif%}
            
            <fieldset class="passageiros" id="passageiros_q{{quadrante.id}}">
-               <legend>Passageiros do quadrante {{quadrante.id}}</legend>
-               passageiros desalocados: <input type="text" name=quadrante_passageiros_alocados" value={{quadrante.passageiros_do_quadrante}}> 
-               passageiros alocados: <input type="text" name="quandrante_passageiros_alocados">   
+               <legend>Passageiros do Quadrante {{quadrante.id}}</legend>
+               passageiros desalocados: <input type="text" name=quadrante_passageiros_desalocados_q{{quadrante.id}}" id="passageiros_desalocados_q{{quadrante.id}}" value={{quadrante.passageiros_do_quadrante}}> 
+               passageiros alocados: <input type="text" name="quadrante_passageiros_alocados_q{{quadrante.id}}" id="passageiros_alocados_q{{quadrante.id}}">   
             </fieldset> 
-            <fieldset class="transportes" id="transportes_q{{quadrante.id}}">
-                <legend>transportes do quadrante {{quadrante.id}}</legend>
-                <div id="container">
+            <fieldset class="transportes" >
+                <legend>Transportes do Quadrante {{quadrante.id}}</legend>
+                <div id="container" id="transportes_q{{quadrante.id}}" >
                    {% for transporte in transportes %}
-                        <div class="box-wrap">
+                        <div class="box-wrap" >
                             <div class="box1"></div>
                             <div class="box2"></div>
                             <div class="box3"></div>

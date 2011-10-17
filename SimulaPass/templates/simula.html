@@ -14,34 +14,41 @@
     <link href="/static/css/grafico_barra.css" rel="stylesheet" type="text/css">
     
     <script>
-        $(document).ready(function(){
+        $(document).ready(function(){    
+            {% for quadrante in quadrantes %}
+                qtd_passageiros_desalocados_q{{quadrante.id}} = $('#passageiros_desalocados_q{{quadrante.id}}').val(); 
+                qtd_passageiros_alocados_q{{quadrante.id}} = $('#passageiros_alocados_q{{quadrante.id}}').val(); 
+                qtd_carros_disponiveis = $('#num_carros').val();
+            {% endfor %}
 
-            $('#simular').click(function(){
-/*
-                for(i=1;i<=5;i++){
-                    q4q2($("#passageiro_teste"+i+""));
-                }
-                q1q3($("#passageiro_teste6"));
-                q1q2($("#passageiro_teste7"));
+            {% for transporte in transportes %}
+                transporte_modelo_{{transporte.id}} = new Transporte()
+                transporte_modelo_{{transporte.id}}.tipo = "{{ transporte.nome }}"
+                transporte_modelo_{{transporte.id}}.tempo = {{ transporte.tempo_viagem }}
+                transporte_modelo_{{transporte.id}}.capacidade_maxima = {{ transporte.capacidade_maxima }}
+                transporte_modelo_{{transporte.id}}.capacidade_atual = {{ transporte.capacidade_atual }}
+                transporte_modelo_{{transporte.id}}.capacidade_confortavel = {{ transporte.capacidade_confortavel }}
+            {% endfor %} 
 
-*/        
-                console.log('clicou');
-                var num_pessoas = $('#num_pessoas').val();
-/*
+            $("#my_form").submit(function(){
+                console.log('subimitou');
                 $.ajax({
-                    url: '/ajax/'+num_pessoas+'/',
+                    type:'POST',
+                    data: $("#my_form").serialize(),
+                    url: '/carros/'+qtd_carros_disponiveis+'/quadrante/'+1+'/',
                     success: function(data) {
                         console.log(data);
                     }
                 });
-*/
             });
-        });//document.ready
+          });//document.ready
 
     </script>
 </head>
 
 <body>
+    <form name='teste' method='post' id="my_form">
+    {% csrf_token %}
     <fieldset>
         <legend>Numeros Gerais do Mundo:</legend>
         (<label for="num_pessoas">Pessoas Mundo</label> + <label for="num_pessoas">Pessoas Evento</label> = <label for="num_pessoas">Total</label>)
@@ -53,17 +60,22 @@
         <label for="num_transportes">Quantidade de Transportes:</label>
         <br/>        
         <input type="text" name='num_transportes' id='num_transportes' value='{{ mundo.qtd_transportes }}'>
+        <br/>
+        <label for="num_transportes">Quantidade de Carros:</label>
+        <br/>        
+        <input type="text" name='num_carros' id='num_carros' value='{{ mundo.qtd_carros }}'>
+
         <br/><br/>
         <label for="num_transportes">Nesse mundo a pessoas possuem carro ?</label>
         <input type="checkbox" name='permite_carros' id='permite_carros_mundo'{%if mundo.permite_carros%}checked{%endif%} > 
 
-        <input type="button" value="simular" id='simular'>
+        <input type="submit" value="simular" id='simular'>
     </fieldset>
     
     {% include "transporte_passageiros.html" %}
     
     {% include "transporte_transportes.html" %}
-
+    </form>
 
 </body>
 

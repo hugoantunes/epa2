@@ -5,6 +5,7 @@ import random
 from django.utils import simplejson
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
+from django.template import RequestContext
 
 from passageiros.models import Passageiro
 from transportes.models import Transporte
@@ -36,7 +37,7 @@ def teste(request):
             'total_pessoas': total_pessoas            
     }
     
-    return render_to_response(template, context)
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 def home(request):
     template = u'index.html'
@@ -58,7 +59,7 @@ def home(request):
             'transportes':transportes,
     }
 
-    return render_to_response(template, context)
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 def ajax(request, numero):
     #import ipdb;ipdb.set_trace()
@@ -110,6 +111,26 @@ def ajax(request, numero):
     
     return HttpResponse(json, mimetype = 'application/json')
 
+def entra_no_transporte(request, num_carros, id_quadrante):
+    transportes = Transporte.objects.all().order_by('tempo_viagem')
+    
+    lista_transportes = [] 
+
+    for transporte in transportes:
+        lista_transportes.append(transporte)
+
+    lista_transportes.append('carro')
+
+    possibilidades_maximas_de_transporte = len(lista_transportes)
+
+    escolha = random.randint(0, possibilidades_maximas_de_transporte-1)
+
+    import ipdb; ipdb.set_trace()
+    json={'passageiros':[]} 
+    json = simplejson.dumps(json)
+    
+    return HttpResponse(json, mimetype = 'application/json')
+ 
 def posiciona_passageiro(request,numero):
 
     if int(numero)%2 ==0:

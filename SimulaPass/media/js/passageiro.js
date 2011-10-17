@@ -73,3 +73,33 @@ function q4q3($obj){
 }
 //FIM MOVIMENTOS Q4
 
+
+//OBJETO Transporte
+function Transporte() { 
+    this.id;
+    this.tipo; 
+    this.tempo;
+    this.capacidade_maxima;
+    this.capacidade_atual;
+    this.capacidade_confortavel;
+    this.conforto;
+    this.posicao_inicial;
+    this.posicao_final; 
+    this.passageiros = new Array(); 
+}
+
+
+//OBJETO Passageiro
+function Passageiro() { 
+    this.tipo; 
+    this.id;
+    this.transporte;
+    this.conforte;
+    
+    this.entra_no_transporte = function(transporte){ 
+        this.transporte = transporte;
+        transporte.passageiros.push(this);
+    }
+
+}
+
