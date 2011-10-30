@@ -30,7 +30,7 @@
                 transporte_modelo_{{transporte.id}}.capacidade_confortavel = {{ transporte.capacidade_confortavel }}
             {% endfor %} 
 
-            $("#my_form").submit(function(){
+            $("#simular").click(function(){
                 console.log('subimitou');
                 $.ajax({
                     type:'POST',
@@ -71,7 +71,7 @@
         <label for="permite_carros">Nesse mundo a pessoas possuem carro ?</label>
         <input type="checkbox" name='permite_carros' id='permite_carros_mundo'{%if mundo.permite_carros%}checked{%endif%} > 
 
-        <input type="submit" value="simular" id='simular'>
+        <input type="button" value="simular" id='simular'>
     </fieldset>
     
     {% include "transporte_passageiros.html" %}
