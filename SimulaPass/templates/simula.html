@@ -31,13 +31,24 @@
             {% endfor %} 
 
             $("#simular").click(function(){
-                console.log('subimitou');
+                //primeiro ajax que monta simulação, cria agentes
                 $.ajax({
                     type:'POST',
                     data: $("#my_form").serialize(),
-                    url: '/mundo/{{mundo.id}}/passageiro/transporte/quadrante/'+1+'/',
+                    url: '/constroi_mundo/{{mundo.id}}/',
                     success: function(data) {
-                        console.log(data);
+                        //alocação do passageiros nos transportes
+                        for (id in data['id_passageiros']){
+                            //console.log(data['id_passageiros'][id]);
+                            $.ajax({
+                                type:'POST',
+                                data: $("#my_form").serialize(),
+                                url: '/aloca_passageiro/'+data['id_passageiros'][id]+'/',
+                                success: function(data) {
+                                    console.log(data) 
+                                }
+                            });
+                        }
                     }
                 });
             });

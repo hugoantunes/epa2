@@ -9,10 +9,10 @@ from django.template import RequestContext
 
 from passageiros.models import Passageiro, AgentePassageiro
 from transportes.models import Transporte, AgenteTransporte
-from mundo.models import Mundo, Simulacao
+from mundo.models import Mundo, Simulacao, Quadrante
 from mega_evento.models import MegaEvento
 
-def teste(request):
+def index(request):
     Simulacao.objects.all().delete()
     AgenteTransporte.objects.all().delete()
     AgentePassageiro.objects.all().delete()
@@ -43,28 +43,165 @@ def teste(request):
     
     return render_to_response(template, context, context_instance=RequestContext(request))
 
-def entra_no_transporte(request,id_mundo, id_quadrante):
-    json={'passageiros':[], 'transportes': []}
-    
-    
+def constroi_mundo(request,id_mundo):
+    #obtem mundo
     mundo = Mundo.objects.get(id=id_mundo)
-    simulacao = Simulacao.objects.filter(mundo=mundo)
-    origem = mundo.quadrantes.get(id=id_quadrante)
-    destinos = mundo.quadrantes.all().exclude(id=id_quadrante)
-    destino = random.choice(destinos)
- 
-    tipos_passageiros = Passageiro.objects.all()
-    tipo_passageiro_escolhido = random.choice(tipos_passageiros)
     
-    if not len(simulacao):
+    mega_evento = MegaEvento.objects.all()[0]
+    mega_evento.qtd_pessoas_esperadas = request.POST['num_pessoas_evento'] 
+
+    #obtem seta dados do mundo de acordo com o post 
+    mundo.qtd_pessoas = request.POST['num_pessoas']
+    mundo.qtd_carros = request.POST['num_carros']
+    mundo.qtd_transportes = request.POST['num_transportes']
+    mundo.permite_carros = request.POST['permite_carros']
+    
+    #obtem simulação 
+    simulacao = Simulacao.objects.filter(mundo=mundo)
+
+    #seta dados simulação de acordo com post
+    try:
+        #simulação ja criada
+        simulacao = simulacao[0]
+        simulacao.qtd_pessoas_usadas += len(simulacao.passageiros)
+        simulacao.qtd_transportes_usados = len(simulacao.transportes)
+        simulacao.qtd_carros_usados =  request.POST['num_carros_usados']
+    except IndexError:
+        #simulação nova
         simulacao = Simulacao.objects.create(
             mundo=mundo,
             qtd_pessoas_usadas=0,
             qtd_transportes_usados=0,
             qtd_carros_usados=0,
             )
-    else:
+    
+    #seta quadrantes de acordo com post
+    quadrantes = Quadrante.objects.all()
+    for quadrante in quadrantes:
+        quadrante.percentual_pessoas = request.POST['percent_pes_q%d' %quadrante.id]
+        quadrante.percentual_transportes = request.POST['percent_trans_q%d' %quadrante.id]
+        quadrante.permite_carros = request.POST.get('permite_carro_q%d' %quadrante.id, False)
+   
+    total_passageiros_geral = []
+    total_passageiros_mega_evento = []
+    total_transportes_geral = []
+    
+    #monta lista aonde valor é o total de passageiros e indice é o quandrante
+    for i in range(0,len(quadrantes)):
+        total_passageiros_geral.append(int(float(mundo.qtd_pessoas)*float(quadrantes[i].percentual_pessoas)/100))
+        total_transportes_geral.append(int(float(mundo.qtd_transportes)*float(quadrantes[i].percentual_transportes)/100))
+    
+        total_passageiros_mega_evento.append(int(float(mega_evento.qtd_pessoas_esperadas)*float(quadrantes[i].percentual_pessoas)/100))
+
+
+    #traz lista de tipos de passageiros e transportes
+    tipos_passageiros = Passageiro.objects.all()
+    tipos_transportes = Transporte.objects.all()
+
+    #cria todos os agentes de transporte por quadrantes
+    for i in range(0, len(total_transportes_geral)):
+        for j in range(0, total_transportes_geral[i]):
+            transporte = AgenteTransporte.objects.create(
+            tipo_transporte = random.choice(tipos_transportes),
+            simulacao=simulacao,
+            origem=quadrantes[i], 
+            destino=random.choice(quadrantes.all().exclude(id=quadrantes[i].id)),  
+            capacidade_atual=0,
+            desconforto=0,
+            )
+
+    agentes_passageiros = {'id_passageiros':[]}
+    #cria todos os agentes de passageiros por quadrantes
+    for i in range(0, len(total_passageiros_geral)):
+        for j in range(0, total_passageiros_geral[i]):
+            passageiro = AgentePassageiro.objects.create(
+            tipo_passageiro=random.choice(tipos_passageiros),
+            conforto_atual=100,
+            simulacao=simulacao,
+            origem=quadrantes[i],
+            destino=random.choice(quadrantes.all().exclude(id=quadrantes[i].id))
+            )
+            agentes_passageiros['id_passageiros'].append(passageiro.id)
+    
+    #cria todos os agentes de passageiros por quadrantes que vao ao mega evento
+    for i in range(0, len(total_passageiros_mega_evento)):
+        for j in range(0, total_passageiros_mega_evento[i]):
+            passageiro = AgentePassageiro.objects.create(
+            tipo_passageiro=random.choice(tipos_passageiros),
+            conforto_atual=100,
+            simulacao=simulacao,
+            origem=quadrantes[i],
+            destino=mega_evento.localizacao
+            )
+            agentes_passageiros['id_passageiros'].append(passageiro.id)
+       
+    #######retornar o total de lugares em cada tipo de transporte por quadrante no json 
+    
+    json = simplejson.dumps(agentes_passageiros)
+        
+    return HttpResponse(json, mimetype = 'application/json')
+
+def aloca_passageiros(request, id_passageiro):
+    #obtem passageiro que vai ser alocado
+    passageiro = AgentePassageiro.objects.get(id=id_passageiro)
+    tem_carro = [True, False] 
+    #obtem lista de transportes
+    transportes = AgenteTransporte.objects.all()
+    
+    #Possui carro ?
+    if passageiro.simulacao.qtd_carros_usados < passageiro.simulacao.mundo.qtd_carros:
+        if passageiro.tipo_passageiro.possui_carro == True:
+            if random.choice(tem_carro) == True:
+                #SETAR PASSAGEIRO COM CARRO, PENSAR NISSO MAIS UM POUCO
+                passageiro.simulacao.qtd_carros_usados += 1
+        else:
+            pass
+        #Qual transporte vai pra onde o passageiro que ir 
+
+        #confortavel
+
+        #rapido 
+
+    passageiro.simulacao.qtd_pessoas_usadas +=1
+    passageiro.simulacao.save()
+    return HttpResponse('alocou')
+
+    
+
+def entra_no_transporte(request,id_mundo, id_quadrante):
+    json={'passageiros':[], 'transportes': []}
+    
+    mundo = Mundo.objects.get(id=id_mundo)
+    simulacao = Simulacao.objects.filter(mundo=mundo)
+
+    #seta dados simulação de acordo com post
+    try:
+        #simulação ja criada
         simulacao = simulacao[0]
+        simulacao.qtd_pessoas_usadas += len(simulacao.passageiros)
+        simulacao.qtd_transportes_usados = len(simulacao.transportes)
+        simulacao.qtd_carros_usados =  request.POST['num_carros_usados']
+    except:
+        pass
+        
+    #obtem origem dato o id do quadrante que pela url do ajax
+    origem = mundo.quadrantes.get(id=id_quadrante)
+
+    #seta os dados do quadrante de origem de acordo com post
+    origem.percentual_pessoas = request.POST['percent_pes_q%d' %origem.id]
+    origem.percentual_transportes = request.POST['percent_trans_q%d' %origem.id]
+    origem.permite_carros = request.POST['permite_carro_q%d' %origem.id]
+   
+    #tudo que não é origem é destino,
+    destinos = mundo.quadrantes.all().exclude(id=id_quadrante)
+
+    #escolhe um destino 
+    destino = random.choice(destinos)
+ 
+    tipos_passageiros = Passageiro.objects.all()
+    tipo_passageiro_escolhido = random.choice(tipos_passageiros)
+    
+
     
     passageiro = AgentePassageiro.objects.create(
             tipo_passageiro=tipo_passageiro_escolhido,
@@ -141,7 +278,8 @@ def entra_no_transporte(request,id_mundo, id_quadrante):
                                 simulacao=simulacao,
                                 origem=origem,
                                 destino=destino,
-                                capacidade_atual=0,desconforto=0,
+                                capacidade_atual=0,
+                                desconforto=0,
                                 )
 
                         transporte.capacidade_atual += 1
@@ -160,6 +298,18 @@ def entra_no_transporte(request,id_mundo, id_quadrante):
             json = simplejson.dumps(json)
         
     return HttpResponse(json, mimetype = 'application/json')
+
+
+
+'''
+#####################################################
+                                                    #
+                                                    #
+    AS VIEWS ABAIXO FORAM USADAS PARA O PROTOTIPO   #
+                                                    #
+                                                    #
+#####################################################
+'''
 
 def home(request):
     template = u'index.html'
@@ -231,18 +381,3 @@ def ajax(request, numero):
     json = simplejson.dumps(json)
     
     return HttpResponse(json, mimetype = 'application/json')
-
- 
-def posiciona_passageiro(request,numero):
-
-    if int(numero)%2 ==0:
-        resultado = 'par'
-    else:
-        resultado = 'impar'
-
-    return HttpResponse('ajax ---- %s é %s'%(str(numero),resultado))
-
-
-def posiciona_transporte(request):
-
-    return HttpResponse('ajax2')

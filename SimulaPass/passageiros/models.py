@@ -18,9 +18,10 @@ class AgentePassageiro(models.Model, threading.Thread):
     tipo_passageiro = models.ForeignKey(Passageiro, related_name='agente_passageiro')
     transporte = models.ForeignKey(AgenteTransporte, related_name='passageiros', blank=True, null=True)
     tem_carro = models.BooleanField()
-    conforto_atual = models.IntegerField()
+    conforto_atual = models.IntegerField() #matar esse campo
     simulacao = models.ForeignKey(Simulacao, related_name='passageiros')
-    origem = models.ForeignKey(Quadrante, related_name='origem', blank=True, null=True)
+    origem = models.ForeignKey(Quadrante, related_name='origem_passageiro', blank=True, null=True)
+    destino = models.ForeignKey(Quadrante, related_name='destino_passageiro', blank=True, null=True)
     
     def __unicode__(self):
         return 'AgentePassageiro: %s-%d' % (self.tipo_passageiro.nome,self.id)
