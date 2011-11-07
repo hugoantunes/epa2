@@ -25,13 +25,35 @@ class Transporte(models.Model, threading.Thread):
         return percentual*2
 
 class AgenteTransporte(models.Model, threading.Thread):
-    tipo_transporte = models.ForeignKey(Transporte, related_name='quadrantes_origens')
-    origem = models.ForeignKey(Quadrante, related_name='quadrantes_origens', blank=True, null=True)
-    destino = models.ForeignKey(Quadrante, related_name='quadrantes_destinos', blank=True, null=True)
+    tipo_transporte = models.ForeignKey(Transporte, related_name='agente_transporte')
+    origem = models.ForeignKey(Quadrante, related_name='origem_transporte', blank=True, null=True)
+    destino = models.ForeignKey(Quadrante, related_name='destino_transporte', blank=True, null=True)
     simulacao = models.ForeignKey(Simulacao, related_name='transportes')
     desconforto = models.IntegerField()
     capacidade_atual = models.IntegerField() 
     
     def __unicode__(self):
         return 'AgenteTransporte: %s-%d' % (self.tipo_transporte.nome,self.id)
-     
+    
+    @property
+    def ha_vagas(self):
+        if self.capacidade_atual < self.tipo_transporte.capacidade_maxima:
+            return True
+        return False
+   
+    def passageiro_entrando(self):
+        self.capacidade_atual += 1
+        self.verifica_conforto()
+        self.save()
+
+    def verifica_conforto(self):
+        if self.capacidade_atual > self.tipo_transporte.capacidade_confortavel:
+            desconforto = self.calcula_desconforto()
+            self.desconforto = desconforto
+
+    def calcula_desconforto(self):
+        max_pessoas_desconfortaveis = self.tipo_transporte.capacidade_maxima - self.tipo_transporte.capacidade_confortavel 
+        qtd_pessoas_desconfortaveis = self.capacidade_atual - self.tipo_transporte.capacidade_confortavel 
+        percent_desconforto = 100*float(qtd_pessoas_desconfortaveis)/float(max_pessoas_desconfortaveis)
+
+        return percent_desconforto

@@ -25,3 +25,18 @@ class AgentePassageiro(models.Model, threading.Thread):
     
     def __unicode__(self):
         return 'AgentePassageiro: %s-%d' % (self.tipo_passageiro.nome,self.id)
+    
+    @property
+    def dentro_transporte(self):
+        if self.transporte:
+            return True
+        return False
+
+    def entra_transporte(self, transporte):
+        self.transporte = transporte 
+        transporte.passageiro_entrando()
+        self.avalia_conforto()
+        self.save()
+
+    def avalia_conforto(self):
+        self.conforto_atual -= self.transporte.desconforto
