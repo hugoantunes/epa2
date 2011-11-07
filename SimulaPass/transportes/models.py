@@ -24,6 +24,10 @@ class Transporte(models.Model, threading.Thread):
         percentual = int(float(self.capacidade_confortavel)/float(self.capacidade_maxima)*100)
         return percentual*2
 
+    @classmethod
+    def todos(cls):
+        return Transporte.objects.all().exclude(nome='carro')
+
 class AgenteTransporte(models.Model, threading.Thread):
     tipo_transporte = models.ForeignKey(Transporte, related_name='agente_transporte')
     origem = models.ForeignKey(Quadrante, related_name='origem_transporte', blank=True, null=True)
@@ -34,7 +38,7 @@ class AgenteTransporte(models.Model, threading.Thread):
     
     def __unicode__(self):
         return 'AgenteTransporte: %s-%d' % (self.tipo_transporte.nome,self.id)
-    
+
     @property
     def ha_vagas(self):
         if self.capacidade_atual < self.tipo_transporte.capacidade_maxima:

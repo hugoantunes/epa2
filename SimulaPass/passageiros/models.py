@@ -3,7 +3,7 @@ import threading
 
 from django.db import models
 
-from transportes.models import AgenteTransporte
+from transportes.models import AgenteTransporte, Transporte
 from mundo.models import Simulacao, Quadrante
 
 class Passageiro(models.Model):
@@ -31,6 +31,20 @@ class AgentePassageiro(models.Model, threading.Thread):
         if self.transporte:
             return True
         return False
+
+    def entra_carro(self):
+        tipo_carro = Transporte.objects.get(nome='carro')
+        carro = AgenteTransporte.objects.create(
+            tipo_transporte = tipo_carro,
+            simulacao=self.simulacao,
+            origem=self.origem, 
+            destino=self.destino,  
+            capacidade_atual=1,
+            desconforto=0,
+        )
+        self.transporte = carro
+        self.tem_carro = True
+        self.save()
 
     def entra_transporte(self, transporte):
         self.transporte = transporte 

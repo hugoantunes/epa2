@@ -19,7 +19,7 @@ def index(request):
     template = u'simula.html'
     
     passageiros = Passageiro.objects.all()
-    transportes = Transporte.objects.all()
+    transportes = Transporte.todos()
     mundo = Mundo.objects.all()[0]
     mega_evento = qtd_pessoas_esperadas = None
 
@@ -95,7 +95,7 @@ def constroi_mundo(request,id_mundo):
 
     #traz lista de tipos de passageiros e transportes
     tipos_passageiros = Passageiro.objects.all()
-    tipos_transportes = Transporte.objects.all()
+    tipos_transportes = Transporte.todos()
 
     #cria todos os agentes de transporte por quadrantes
     for i in range(0, len(total_transportes_geral)):
@@ -150,43 +150,52 @@ def aloca_passageiros(request, id_passageiro):
     
     #Possui carro ?
     passageiro.simulacao.mundo.qtd_carros = request.POST['num_carros']
-    passageiro.origem.permite_carros = request.POST.get('permite_carro_q%d' %passageiro.origem.id, False)
+    if request.POST.get('permite_carro_q%d' %passageiro.origem.id, False) == 'on':
+        passageiro.origem.permite_carros=True
+    else:
+        passageiro.origem.permite_carros=False
     
     #escolhe tipo de transporte
-    tipo_transporte_escolhido = random.choice(Transporte.objects.all())
+    tipo_transporte_escolhido = random.choice(Transporte.todos())
+    #Se ainda há carros disponiveis no mundo
     
-    if passageiro.simulacao.qtd_carros_usados < passageiro.simulacao.mundo.qtd_carros:
-        if passageiro.tipo_passageiro.tem_carro == True and passageiro.origem.permite_carros == True :
+    if int(passageiro.simulacao.qtd_carros_usados) < int(passageiro.simulacao.mundo.qtd_carros):
+        #Se tipo do passageiro permite carro e quandrante permite carro
+        if passageiro.tipo_passageiro.tem_carro == True and passageiro.origem.permite_carros:
+            #Se passageiro tem carro
             if random.choice(tem_carro) == True:
-                #SETAR PASSAGEIRO COM CARRO, PENSAR NISSO MAIS UM POUCO
+                #Entra no carro
+                passageiro.entra_carro()
                 passageiro.simulacao.qtd_carros_usados += 1
+                passageiro.simulacao.save()
+
+    if not passageiro.dentro_transporte: 
+        #passageiro tenta ir no transporte predileto
+        transportes_possiveis = transportes.filter(tipo_transporte=tipo_transporte_escolhido)
+        if transportes_possiveis:
+            for transporte in transportes_possiveis:
+                if not passageiro.dentro_transporte:
+                    if transporte.ha_vagas:
+                       passageiro.entra_transporte(transporte)
+                       passageiro.simulacao.qtd_transportes_usados +=1
         else:
-            #passageiro tenta ir no transporte predileto
-            transportes_possiveis = transportes.filter(tipo_transporte=tipo_transporte_escolhido)
-            if transportes_possiveis:
-                for transporte in transportes_possiveis:
-                    if not passageiro.dentro_transporte:
-                        if transporte.ha_vagas:
+            #não tendo transporte predileto ele tenta ir no mais rapido, mais confortavel possivel
+            transportes_possiveis = transportes.filter(origem=passageiro.origem, destino=passageiro.destino).order_by('-tipo_transporte__tempo_viagem')
+            for transporte in transportes_possiveis:
+                if not passageiro.dentro_transporte:
+                    if transporte.ha_vagas:
+                        if int(transporte.desconforto) <= int(passageiro.passageiro_tipo.conforto_toleravel):
                            passageiro.entra_transporte(transporte)
                            passageiro.simulacao.qtd_transportes_usados +=1
-            else:
-                #não tendo transporte predileto ele tenta ir no mais rapido, mais confortavel possivel
-                transportes_possiveis = transportes.filter(origem=passageiro.origem, destino=passageiro.destino).order_by('-tipo_transporte__tempo_viagem')
+                    else:
+                        #remove transporte que eu ja sei que não possui vagas
+                        transportes_possiveis.exclude(transporte)
+            #se ainda não entrou ele tenta ir em qualquer um dando preferencia pelos mais rapidos
+            if not passageiro.dentro_transporte: 
                 for transporte in transportes_possiveis:
-                    if not passageiro.dentro_transporte:
-                        if transporte.ha_vagas:
-                            if transporte.desconforto <= passageiro.passageiro_tipo.conforto_toleravel:
-                               passageiro.entra_transporte(transporte)
-                               passageiro.simulacao.qtd_transportes_usados +=1
-                        else:
-                            #remove transporte que eu ja sei que não possui vagas
-                            transportes_possiveis.exclude(transporte)
-                #se ainda não entrou ele tenta ir em qualquer um dando preferencia pelos mais rapidos
-                if not passageiro.dentro_transporte: 
-                    for transporte in transportes_possiveis:
-                        if transporte.ha_vagas:
-                           passageiro.entra_transporte(transporte)
-                           passageiro.simulacao.qtd_transportes_usados +=1
+                    if transporte.ha_vagas:
+                       passageiro.entra_transporte(transporte)
+                       passageiro.simulacao.qtd_transportes_usados +=1
 
     passageiro.simulacao.qtd_pessoas_usadas +=1
     passageiro.simulacao.save()
@@ -207,7 +216,7 @@ def home(request):
     template = u'index.html'
     
     passageiros = Passageiro.objects.all()
-    transportes = Transporte.objects.all()
+    transportes = Transporte.todos()
     
     json_passageiros = {'passageiros':[]}
 
@@ -227,7 +236,7 @@ def home(request):
 
 def ajax(request, numero):
     passageiros = Passageiro.objects.all()
-    transportes = Transporte.objects.all().order_by('tempo_viagem')
+    transportes = Transporte.todos().order_by('tempo_viagem')
     possibilidades_passageiros = len(passageiros)
     
     json={'passageiros':[]}
