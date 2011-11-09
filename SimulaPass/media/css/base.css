@@ -63,3 +63,10 @@ fieldset.transporte{
     width: 30px;
     float: right; 
 }
+
+fieldset.info-quadrante{
+    float:left;
+    width:22%;
+    margin:5px;
+}
+

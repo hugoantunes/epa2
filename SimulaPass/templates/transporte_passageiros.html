@@ -1,4 +1,15 @@
     <h3>Passageiros x Transporte</h3>
+            
+   {% for quadrante in quadrantes %}
+   <fieldset class='info-quadrante'>
+       <legend>Quadrante {{quadrante.id}}</legend>
+       Pessoas: <input type="text" name='percent_pes_q{{quadrante.id}}' id='percent_pes_q{{quadrante.id}}' value='{{quadrante.percentual_pessoas}}'>%
+       <br/>
+       Transportes: <input type="text" name='percent_trans_q{{quadrante.id}}' id='percent_trans_q{{quadrante.id}}' value='{{quadrante.percentual_transportes}}'>%    
+       <br/>
+       Permite Carro: <input type="checkbox" name='permite_carro_q{{quadrante.id}}' id='permite_carro_q{{quadrante.id}}' {%if quadrante.permite_carros%}checked{%endif%}>   
+    </fieldset>
+   {% endfor %}
     <div class='ambiente_escolha'>
        {% for quadrante in quadrantes %}
        {% if quadrante.percentual_transportes != 0 %}
@@ -6,7 +17,7 @@
            
            <fieldset class="passageiros" id="passageiros_q{{quadrante.id}}">
                <legend>Passageiros do Quadrante {{quadrante.id}}</legend>
-               passageiros desalocados: <input type="text" name=quadrante_passageiros_desalocados_q{{quadrante.id}}" id="passageiros_desalocados_q{{quadrante.id}}" value={{quadrante.passageiros_do_quadrante}}> 
+               passageiros desalocados: <input type="text" name=quadrante_passageiros_desalocados_q{{quadrante.id}}" id="passageiros_desalocados_q{{quadrante.id}}"> 
                passageiros alocados: <input type="text" name="quadrante_passageiros_alocados_q{{quadrante.id}}" id="passageiros_alocados_q{{quadrante.id}}" readonly="readonly">   
             </fieldset> 
             <fieldset class="transportes" >
@@ -19,7 +30,7 @@
                             <div class="box3"></div>
                             <div class="box4"></div>
                             <div class="target" style="left:{{transporte.porcentagem_maxima_confortavel}}px"></div>
-                            <div class="actual" style="width: {{transporte.porcentagem_atual_de_passageiros}}%"></div>
+                            <div class="actual" id='q{{quadrante.id}}_t{{ transporte.id }}' style="width: {{transporte.porcentagem_atual_de_passageiros}}%"></div>
                             <div class="mylabel">{{ transporte.nome }}</div>
                         </div>
                         {% if not forloop.last %}<p></p>{% endif %}
@@ -32,7 +43,7 @@
                             <div class="box2"></div>
                             <div class="box3"></div>
                             <div class="box4"></div>
-                            <div class="actual" style="width:0%"></div>
+                            <div class="actual" id='q{{quadrante.id}}_carro' style="width:0%"></div>
                             <div class="mylabel">Carros</div>
                         </div>
                    {% endif %}
@@ -60,5 +71,6 @@
        {%endif%} 
        {% endfor %}
     </div>
+
 
 

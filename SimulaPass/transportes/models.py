@@ -56,8 +56,11 @@ class AgenteTransporte(models.Model, threading.Thread):
             self.desconforto = desconforto
 
     def calcula_desconforto(self):
-        max_pessoas_desconfortaveis = self.tipo_transporte.capacidade_maxima - self.tipo_transporte.capacidade_confortavel 
-        qtd_pessoas_desconfortaveis = self.capacidade_atual - self.tipo_transporte.capacidade_confortavel 
-        percent_desconforto = 100*float(qtd_pessoas_desconfortaveis)/float(max_pessoas_desconfortaveis)
-
+        try:
+            max_pessoas_desconfortaveis = self.tipo_transporte.capacidade_maxima - self.tipo_transporte.capacidade_confortavel 
+            qtd_pessoas_desconfortaveis = self.capacidade_atual - self.tipo_transporte.capacidade_confortavel 
+            percent_desconforto = 100*float(qtd_pessoas_desconfortaveis)/float(max_pessoas_desconfortaveis)
+        except:
+            import ipdb; ipdb.set_trace()
+            
         return percent_desconforto

@@ -15,6 +15,7 @@
     
     <script>
         $(document).ready(function(){    
+            var teste;
             {% for quadrante in quadrantes %}
                 qtd_passageiros_desalocados_q{{quadrante.id}} = $('#passageiros_desalocados_q{{quadrante.id}}').val(); 
                 qtd_passageiros_alocados_q{{quadrante.id}} = $('#passageiros_alocados_q{{quadrante.id}}').val(); 
@@ -39,13 +40,25 @@
                     success: function(data) {
                         //alocação do passageiros nos transportes
                         for (id in data['id_passageiros']){
-                            //console.log(data['id_passageiros'][id]);
+                            
                             $.ajax({
                                 type:'POST',
                                 data: $("#my_form").serialize(),
                                 url: '/aloca_passageiro/'+data['id_passageiros'][id]+'/',
                                 success: function(data) {
-                                    console.log(data) 
+                                    console.log(data);
+                                    grafico_transporte = $('#'+data.transporte+''); 
+                                    if(data['tipo_transporte'] == 'carro'){
+                                        antigo = parseInt(grafico_transporte.css('width'));
+                                        novo = antigo + parseInt(data.aumento); 
+                                    }
+                                    else{
+                                        novo = parseInt(data.aumento);
+                                    }
+                                    grafico_transporte.animate({width:novo});
+                                    $('#passageiros_desalocados_q'+data['quadrante']+'').val(data['passageiros_desalocados'])
+                                    $('#passageiros_alocados_q'+data['quadrante']+'').val(data['passageiros_alocados'])
+
                                 }
                             });
                         }
@@ -58,7 +71,7 @@
 </head>
 
 <body>
-    <form name='teste' method='post' id="my_form">
+    <form name='simula_form' method='post' id="my_form">
     {% csrf_token %}
     <fieldset>
         <legend>Numeros Gerais do Mundo:</legend>

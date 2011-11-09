@@ -146,8 +146,9 @@ def aloca_passageiros(request, id_passageiro):
     tem_carro = [True, False] 
 
     #obtem lista de transportes
-    transportes = AgenteTransporte.objects.all()
-    
+    carro = Transporte.objects.get(nome='carro')
+    transportes = AgenteTransporte.objects.filter(origem=passageiro.origem, destino=passageiro.destino).exclude(tipo_transporte=carro)
+
     #Possui carro ?
     passageiro.simulacao.mundo.qtd_carros = request.POST['num_carros']
     if request.POST.get('permite_carro_q%d' %passageiro.origem.id, False) == 'on':
@@ -155,13 +156,22 @@ def aloca_passageiros(request, id_passageiro):
     else:
         passageiro.origem.permite_carros=False
     
+    if request.POST.get('permite_carros', False) == 'on':
+        passageiro.simulacao.mundo.permite_carros=True
+    else:
+        passageiro.simulacao.mundo.permite_carros=False
+   
+     
+    
+
     #escolhe tipo de transporte
     tipo_transporte_escolhido = random.choice(Transporte.todos())
     #Se ainda há carros disponiveis no mundo
     
-    if int(passageiro.simulacao.qtd_carros_usados) < int(passageiro.simulacao.mundo.qtd_carros):
-        #Se tipo do passageiro permite carro e quandrante permite carro
-        if passageiro.tipo_passageiro.tem_carro == True and passageiro.origem.permite_carros:
+    #Se tipo do passageiro permite carro e quandrante permite carro
+    if passageiro.tipo_passageiro.tem_carro == True and passageiro.origem.permite_carros and  passageiro.simulacao.mundo.permite_carros:
+
+        if int(passageiro.simulacao.qtd_carros_usados) < int(passageiro.simulacao.mundo.qtd_carros):
             #Se passageiro tem carro
             if random.choice(tem_carro) == True:
                 #Entra no carro
@@ -180,26 +190,63 @@ def aloca_passageiros(request, id_passageiro):
                        passageiro.simulacao.qtd_transportes_usados +=1
         else:
             #não tendo transporte predileto ele tenta ir no mais rapido, mais confortavel possivel
-            transportes_possiveis = transportes.filter(origem=passageiro.origem, destino=passageiro.destino).order_by('-tipo_transporte__tempo_viagem')
+            transportes_possiveis = transportes.order_by('-tipo_transporte__tempo_viagem')
             for transporte in transportes_possiveis:
                 if not passageiro.dentro_transporte:
                     if transporte.ha_vagas:
-                        if int(transporte.desconforto) <= int(passageiro.passageiro_tipo.conforto_toleravel):
+                        if int(transporte.desconforto) <= int(passageiro.tipo_passageiro.conforto_toleravel):
                            passageiro.entra_transporte(transporte)
                            passageiro.simulacao.qtd_transportes_usados +=1
                     else:
+                        pass
                         #remove transporte que eu ja sei que não possui vagas
-                        transportes_possiveis.exclude(transporte)
-            #se ainda não entrou ele tenta ir em qualquer um dando preferencia pelos mais rapidos
-            if not passageiro.dentro_transporte: 
-                for transporte in transportes_possiveis:
-                    if transporte.ha_vagas:
+                        #transportes_possiveis.exclude(transporte)
+                #se ainda não entrou ele tenta ir em qualquer um dando preferencia pelos mais rapidos
+                if not passageiro.dentro_transporte: 
+                    for transporte in transportes_possiveis:
+                       import ipdb; ipdb.set_trace()
                        passageiro.entra_transporte(transporte)
                        passageiro.simulacao.qtd_transportes_usados +=1
 
     passageiro.simulacao.qtd_pessoas_usadas +=1
     passageiro.simulacao.save()
-    return HttpResponse('alocou')
+    
+    json = {} 
+    passageiros_alocados =  AgentePassageiro.objects.filter(origem=passageiro.origem).exclude(transporte=None).count()
+    passageiros_desalocados = AgentePassageiro.objects.filter(origem=passageiro.origem).count() - passageiros_alocados
+    if passageiro.transporte:
+        json.update({
+            'tipo_transporte':passageiro.transporte.tipo_transporte.nome,
+            'passageiros_alocados': passageiros_alocados,
+            'passageiros_desalocados': passageiros_desalocados,
+            'quadrante': passageiro.origem.id,
+            })
+        if passageiro.tem_carro == True:
+            
+            aumento = float(1)/float(passageiro.simulacao.mundo.qtd_carros)*100
+             
+            json.update({
+                    'transporte': 'q%d_carro'%passageiro.origem.id,
+                    'aumento': aumento*2,
+            })
+
+        else:
+            qtd_passageiros, total_lugares = 0, 0
+            for transporte in AgenteTransporte.objects.filter(tipo_transporte = passageiro.transporte.tipo_transporte, origem=passageiro.transporte.origem):
+                qtd_passageiros += transporte.capacidade_atual
+                total_lugares += transporte.tipo_transporte.capacidade_maxima
+            aumento = int(float(qtd_passageiros)/float(total_lugares)*100)
+
+            
+            json.update({
+                    'transporte': 'q%d_t%d'%(passageiro.origem.id, passageiro.transporte.tipo_transporte.id),
+                    'aumento': aumento*2,
+            })
+     
+    json = simplejson.dumps(json)
+        
+    return HttpResponse(json, mimetype = 'application/json')
+
 
 
 '''
