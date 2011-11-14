@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from mundo.models import Mundo, Quadrante
+from mundo.models import Mundo, Quadrante, DistanciasQuadante
 
 class QuadranteInline(admin.TabularInline):
     extra = 0
@@ -15,5 +15,10 @@ class MundoAdmin(admin.ModelAdmin):
     list_filter = ['permite_carros']
     search_fields = ['id']
 
-admin.site.register(Mundo, MundoAdmin)
+class DistanciasQuadrantesAdmin(admin.ModelAdmin):
+    model = DistanciasQuadante
+   
+    list_display = ['__str__','distancia']
 
+admin.site.register(Mundo, MundoAdmin)
+admin.site.register(DistanciasQuadante, DistanciasQuadrantesAdmin)

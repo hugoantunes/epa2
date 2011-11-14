@@ -44,6 +44,15 @@ div.quadrante{
     padding:40px;
 }
 
+span.cenario-calcada{
+    border: solid red;
+    position: absolute;
+    left: 30px;
+    top: 121px;
+    height: 58px;
+    width: 795px;
+}
+
 div.primeiro{
     top: 0px;
     right: 0px;
@@ -64,106 +73,42 @@ div.quarto{
     left: 0px;
 }
 
-span.obj{
+span.transporte{
     position:absolute;
+    border-radius: 18px;
+    width:10px;
+    height:10px;
+    margin:0;
 }
 
-span.obj_q1{
+span.q1{
     right:0px;
     top:15px;
 }
 
-span.obj_q2{
+span.q2{
     right:840px;
     top:15px;
 }
 
-span.obj_q3{
+span.q3{
     right:840px;
     top:290px;
 }
 
-span.obj_q4{
+span.q4{
     right:15px;
     top:290px;
 }
 
-span#transporte{
-    border-radius: 18px;
-    width:10px;
-    height:10px;
-    background-color:red;
+.vazio{
+    background-color:#7CFC00;
 }
 
-span#passageiro_teste1{
-    border-radius: 18px;
-    width:10px;
-    height:10px;
-    background-color:red;
-    position:absolute;
-    right:15px;
-    top:290px;
+.moderado{
+    background-color:#FFFF00;
 }
 
-span#passageiro_teste2{
-    border-radius: 18px;
-    width:10px;
-    height:10px;
-    background-color:red;
-    position:absolute;
-    right:15px;
-    top:290px;
-}
-span#passageiro_teste3{
-    border-radius: 18px;
-    width:10px;
-    height:10px;
-    background-color:red;
-    position:absolute;
-    right:15px;
-    top:290px;
-}
-span#passageiro_teste4{
-    border-radius: 18px;
-    width:10px;
-    height:10px;
-    background-color:red;
-    position:absolute;
-    right:15px;
-    top:290px;
-}
-span#passageiro_teste5{
-    border-radius: 18px;
-    width:10px;
-    height:10px;
-    background-color:red;
-    position:absolute;
-    right:15px;
-    top:290px;
-}
-span#passageiro_teste6{
-    border-radius: 18px;
-    width:10px;
-    height:10px;
-    background-color:red;
-    position:absolute;
-    right:15px;
-    top:15px;
-}
-span#passageiro_teste7{
-    border-radius: 18px;
-    width:10px;
-    height:10px;
-    background-color:red;
-    position:absolute;
-    right:15px;
-    top:15px;
-}
-span.cenario-calcada{
-    border: solid red;
-    position: absolute;
-    left: 30px;
-    top: 121px;
-    height: 58px;
-    width: 795px;
-}
+.cheio{
+    background-color:#FF0000;  
+

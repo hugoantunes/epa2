@@ -14,7 +14,62 @@
     <link href="/static/css/grafico_barra.css" rel="stylesheet" type="text/css">
     
     <script>
-        $(document).ready(function(){    
+        $(document).ready(function(){
+            
+            function posiciona_transportes(transporte){
+                console.log(transporte);
+                mapa = $('div.mundo');
+                mapa.append('<span id="'+transporte.id+'" class="transporte '+transporte.origem+' '+transporte.status+'" origem="'+transporte.origem+'" destino="'+transporte.destino+'"></span>');
+            }
+            function movimenta_transportes(transporte){
+                transporte = $('#'+transporte.id+'')
+                origem = transporte.attr('origem');
+                destino = transporte.attr('destino');
+                //origem em Q1
+                if(origem == 'q1' && destino == 'q2'){
+                    q1q2(transporte);
+                }
+                if(origem == 'q1' && destino == 'q3'){
+                    q1q3(transporte); 
+                }
+                if(origem == 'q1' && destino == 'q4'){
+                    q1q4(transporte);
+                }
+
+                //origem em Q2
+                if(origem == 'q2' && destino == 'q1'){
+                    q1q2(transporte);
+                }
+                if(origem == 'q2' && destino == 'q3'){
+                    q1q3(transporte); 
+                }
+                if(origem == 'q2' && destino == 'q4'){
+                    q1q4(transporte);
+                }
+
+                //origem em Q3
+                if(origem == 'q3' && destino == 'q1'){
+                    q1q2(transporte);
+                }
+                if(origem == 'q3' && destino == 'q2'){
+                    q1q3(transporte); 
+                }
+                if(origem == 'q3' && destino == 'q4'){
+                    q1q4(transporte);
+                }
+
+                //origem em Q4
+                if(origem == 'q4' && destino == 'q1'){
+                    q1q2(transporte);
+                }
+                if(origem == 'q4' && destino == 'q2'){
+                    q1q3(transporte); 
+                }
+                if(origem == 'q4' && destino == 'q3'){
+                    q1q4(transporte);
+                }
+            }
+
             var teste;
             {% for quadrante in quadrantes %}
                 qtd_passageiros_desalocados_q{{quadrante.id}} = $('#passageiros_desalocados_q{{quadrante.id}}').val(); 
@@ -39,14 +94,16 @@
                     url: '/constroi_mundo/{{mundo.id}}/',
                     success: function(data) {
                         //alocação do passageiros nos transportes
-                        for (id in data['id_passageiros']){
-                            
+                        var qtds_alocados = 0;
+                        total_passageiros =  data['id_passageiros'].length;
+                        
+                        for (id in data['id_passageiros']){    
                             $.ajax({
                                 type:'POST',
                                 data: $("#my_form").serialize(),
                                 url: '/aloca_passageiro/'+data['id_passageiros'][id]+'/',
                                 success: function(data) {
-                                    console.log(data);
+                                    qtds_alocados ++;
                                     grafico_transporte = $('#'+data.transporte+''); 
                                     if(data['tipo_transporte'] == 'carro'){
                                         antigo = parseInt(grafico_transporte.css('width'));
@@ -55,13 +112,25 @@
                                     else{
                                         novo = parseInt(data.aumento);
                                     }
-                                    grafico_transporte.animate({width:novo});
+                                    grafico_transporte.css('width', novo);
                                     $('#passageiros_desalocados_q'+data['quadrante']+'').val(data['passageiros_desalocados'])
                                     $('#passageiros_alocados_q'+data['quadrante']+'').val(data['passageiros_alocados'])
-
+                                    
+                                    if(qtds_alocados==total_passageiros){
+                                        console.log(data)
+                                        $.getJSON('/monta_mapa/transportes.json', function(data) { 
+                                            for(i in data['transportes']){
+                                                posiciona_transportes(data['transportes'][i]);        
+                                            }
+                                            for(i in data['transportes']){
+                                                movimenta_transportes(data['transportes'][i]);        
+                                            } 
+                                        });
+                                    }
                                 }
                             });
                         }
+
                     }
                 });
             });

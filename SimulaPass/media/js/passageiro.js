@@ -2,19 +2,19 @@
 var tops = [0, 15, 290]
 var rights = [0, 415, 838]
 
-function movimenta($obj, top, right){
+function movimenta($obj, top, right, tempo){
     if(right==0)
-        $obj.animate({top:top});
+        $obj.animate({top:top}, tempo);
     else if(top==0)
-        $obj.animate({right:right});
+        $obj.animate({right:right}, tempo);
     else
-        $obj.animate({top:top,right:right});
+        $obj.animate({top:top,right:right}, tempo);
 }
 //MOVIMENTOS DE Q1
 function q1q3($obj){
-    movimenta($obj, tops[1], rights[1]);
-    movimenta($obj, tops[2], rights[1]);
-    movimenta($obj, tops[2], rights[2]);
+    movimenta($obj, tops[1], rights[1], 5000);
+    movimenta($obj, tops[2], rights[1]), 2000;
+    movimenta($obj, tops[2], rights[2], 4000);
 }
 
 function q1q2($obj){

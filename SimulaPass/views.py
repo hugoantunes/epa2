@@ -160,9 +160,6 @@ def aloca_passageiros(request, id_passageiro):
         passageiro.simulacao.mundo.permite_carros=True
     else:
         passageiro.simulacao.mundo.permite_carros=False
-   
-     
-    
 
     #escolhe tipo de transporte
     tipo_transporte_escolhido = random.choice(Transporte.todos())
@@ -204,7 +201,6 @@ def aloca_passageiros(request, id_passageiro):
                 #se ainda não entrou ele tenta ir em qualquer um dando preferencia pelos mais rapidos
                 if not passageiro.dentro_transporte: 
                     for transporte in transportes_possiveis:
-                       import ipdb; ipdb.set_trace()
                        passageiro.entra_transporte(transporte)
                        passageiro.simulacao.qtd_transportes_usados +=1
 
@@ -247,7 +243,24 @@ def aloca_passageiros(request, id_passageiro):
         
     return HttpResponse(json, mimetype = 'application/json')
 
+def monta_mapa(request):
+    json = {'transportes': []}
+    
+    transportes = AgenteTransporte.objects.filter(capacidade_atual__gt=0)
+     
+    for transporte in transportes: 
+        json['transportes'].append({
+            "id":transporte.id,
+            "tipo_transporte":transporte.tipo_transporte.nome,
+            "origem": "q%d" %transporte.origem.id,
+            "destino":"q%d" %transporte.destino.id,
+            "tempo": transporte.tipo_transporte.tempo_viagem,
+            "status":transporte.status,
+            })
 
+    json = simplejson.dumps(json)
+    
+    return HttpResponse(json, mimetype = 'application/json')
 
 '''
 #####################################################

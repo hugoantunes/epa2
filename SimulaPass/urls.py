@@ -18,7 +18,10 @@ urlpatterns = patterns('',
     url(r'^constroi_mundo/(?P<id_mundo>\d+)/$','SimulaPass.views.constroi_mundo'),
     #dado um passageiro ele entra em um transporte
     url(r'^aloca_passageiro/(?P<id_passageiro>\d+)/$','SimulaPass.views.aloca_passageiros'),
-    
+    #retorna os transportes do mapa para simuação
+    url(r'^monta_mapa/transportes.json$','SimulaPass.views.monta_mapa'),
+
+
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
       {'document_root':settings.MEDIA_ROOT}
     ),

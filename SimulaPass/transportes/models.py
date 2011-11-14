@@ -7,6 +7,7 @@ from mundo.models import Quadrante, Simulacao
 
 class Transporte(models.Model, threading.Thread):
     nome =  models.CharField(max_length=90)
+    velocidade_confortavel = models.FloatField()
     tempo_viagem = models.FloatField()
     capacidade_maxima = models.IntegerField()
     capacidade_atual = models.IntegerField()
@@ -64,3 +65,13 @@ class AgenteTransporte(models.Model, threading.Thread):
             import ipdb; ipdb.set_trace()
             
         return percent_desconforto
+    
+    @property
+    def status(self):
+        if self.capacidade_atual == self.tipo_transporte.capacidade_maxima:
+            return 'cheio'
+        elif self.capacidade_atual >= self.tipo_transporte.capacidade_maxima/2:
+            return 'moderado'
+        else:
+            return 'vazio'
+
