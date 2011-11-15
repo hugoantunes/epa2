@@ -144,12 +144,10 @@
     {% csrf_token %}
     <fieldset>
         <legend>Numeros Gerais do Mundo:</legend>
-        (<label for="num_pessoas">Pessoas Mundo</label> + <label for="num_pessoas">Pessoas Evento</label> = <label for="num_pessoas">Total</label>)
+        <label for="num_pessoas">Pessoas Mundo</label>
         </br>
-        <input type="text" name='num_pessoas' id='num_pessoas' value='{{ mundo.qtd_pessoas }}'> + 
-        <input type="text" name='num_pessoas_evento' id='num_pessoas_evento' value='{{ mega_evento.qtd_pessoas_esperadas }}'> = 
-        <input type="text" readonly='readonly' name='num_pessoas_total' id='num_pessoas_total'  value='{{ total_pessoas }}'>
-        <br/><br/>
+        <input type="text" name='num_pessoas' id='num_pessoas' value='{{ mundo.qtd_pessoas }}'> 
+        <br/>
         <label for="num_transportes">Quantidade de Transportes:</label>
         <br/>        
         <input type="text" name='num_transportes' id='num_transportes' value='{{ mundo.qtd_transportes }}'>
@@ -164,7 +162,21 @@
         <label for="permite_carros">Nesse mundo a pessoas possuem carro ?</label>
         <input type="checkbox" name='permite_carros' id='permite_carros_mundo'{%if mundo.permite_carros%}checked{%endif%} > 
 
-        <input type="button" value="simular" id='simular'>
+        <br/><br/>
+        <label for="num_pessoas_evento">Quantidade pessoas mega evento:</label>
+        <br/>
+        <input type="text" name='num_pessoas_evento' id='num_pessoas_evento' value='{{ mega_evento.qtd_pessoas_esperadas }}'> 
+        <br/>
+        <label for="local_mega_evento">Local Mega Evento:</label>
+        <br/>
+        <select>
+            {% for quadrante in quadrantes %}
+            <option name='local_mega_evento' value='{{quadrante.id}}'>{{quadrante}}</option>
+            {% endfor %}
+        </select>
+        <br/>
+        <br/>      
+       <input type="button" value="simular" id='simular'>
     </fieldset>
     
     {% include "transporte_passageiros.html" %}

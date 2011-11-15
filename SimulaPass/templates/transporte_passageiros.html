@@ -8,6 +8,16 @@
        Transportes: <input type="text" name='percent_trans_q{{quadrante.id}}' id='percent_trans_q{{quadrante.id}}' value='{{quadrante.percentual_transportes}}'>%    
        <br/>
        Permite Carro: <input type="checkbox" name='permite_carro_q{{quadrante.id}}' id='permite_carro_q{{quadrante.id}}' {%if quadrante.permite_carros%}checked{%endif%}>   
+       <br/>
+       Vazão Confortavel: <input type="text" name='vazao_confortavel_q{{quadrante.id}}' id='vazao_confortavel_q{{quadrante.id}}' value='{{quadrante.vazao_confortavel}}' >   
+       <br/>
+       Vazão Moderada: <input type="text" name='vazao_moderada_q{{quadrante.id}}' id='vazao_moderada_q{{quadrante.id}}' value='{{quadrante.vazao_moderada}}' >   
+       <br/>
+       Vazão Máxima: <input type="text" name='vazao_maxima_q{{quadrante.id}}' id='vazao_maxima_q{{quadrante.id}}' value='{{quadrante.vazao_maxima}}' >   
+       <br/>
+       {% for distancias in quadrante.distancias_origens.all %}
+            {{ distancias }}: <input type="text" name='{{ distancias }}' id='{{ distancias }}' value='{{distancias.distancia}}'>
+       {% endfor %}
     </fieldset>
    {% endfor %}
     <div class='ambiente_escolha'>

@@ -7,6 +7,9 @@ class Mundo(models.Model):
     qtd_carros = models.IntegerField(max_length=255)
     permite_carros = models.BooleanField()  
 
+    def __unicode__(self):
+        return "mundo_%d" %self.id
+
 class Quadrante(models.Model):
     mundo = models.ForeignKey(Mundo, related_name='quadrantes')
     percentual_pessoas = models.IntegerField(max_length=255)
@@ -24,9 +27,9 @@ class Quadrante(models.Model):
     def passageiros_do_quadrante(self):
         return int(float(self.mundo.qtd_pessoas)*float(self.percentual_pessoas)/100)
 
-class DistanciasQuadante(models.Model):
-    origem = models.ForeignKey(Quadrante, related_name='origens')
-    destino = models.ForeignKey(Quadrante, related_name='destinos')
+class DistanciasQuadrante(models.Model):
+    origem = models.ForeignKey(Quadrante, related_name='distancias_origens')
+    destino = models.ForeignKey(Quadrante, related_name='distancias_destinos')
     distancia = models.IntegerField(max_length=255) 
     
     def __unicode__(self):
