@@ -169,9 +169,9 @@
         <br/>
         <label for="local_mega_evento">Local Mega Evento:</label>
         <br/>
-        <select>
+        <select name="local_mega_evento" id="local_mega_evento">
             {% for quadrante in quadrantes %}
-            <option name='local_mega_evento' value='{{quadrante.id}}'>{{quadrante}}</option>
+            <option name='local_mega_evento' value='{{quadrante.id}}' {% if quadrante.evento.all.0 %} selected="selected" {% endif %} >{{quadrante}}</option>
             {% endfor %}
         </select>
         <br/>
