@@ -1,6 +1,6 @@
 //MOVIMENTOS Q1
 var tops = [0, 15, 290]
-var rights = [0, 415, 838]
+var rights = [0, 15 , 415, 838]
 
 function movimenta($obj, top, right, tempo){
     if(right==0)
@@ -12,13 +12,13 @@ function movimenta($obj, top, right, tempo){
 }
 //MOVIMENTOS DE Q1
 function q1q3($obj){
-    movimenta($obj, tops[1], rights[1], 5000);
-    movimenta($obj, tops[2], rights[1]), 2000;
-    movimenta($obj, tops[2], rights[2], 4000);
+    movimenta($obj, tops[1], rights[2], 5000);
+    movimenta($obj, tops[2], rights[2]), 2000;
+    movimenta($obj, tops[2], rights[3], 4000);
 }
 
 function q1q2($obj){
-    movimenta($obj, tops[0], rights[2]);
+    movimenta($obj, tops[0], rights[3]);
 }
 
 function q1q4($obj){
@@ -28,9 +28,9 @@ function q1q4($obj){
 
 //MOVIMENTOS DE Q2
 function q2q4($obj){
-    movimenta($obj, tops[1], rights[2]);
-    movimenta($obj, tops[2], rights[2]);
-    movimenta($obj, tops[1], rights[2]);
+    movimenta($obj, tops[0], rights[2]);
+    movimenta($obj, tops[2], rights[0]);
+    movimenta($obj, tops[0], rights[1]);
 }
 
 function q2q1($obj){
@@ -44,8 +44,8 @@ function q2q3($obj){
 
 //MOVIMENTOS Q3
 function q3q1($obj){
-    movimenta($obj, tops[2], rights[2]);
-    movimenta($obj, tops[1], rights[2]);
+    movimenta($obj, tops[2], rights[3]);
+    movimenta($obj, tops[1], rights[3]);
     movimenta($obj, tops[1], rights[1]);
 }
 
@@ -54,14 +54,15 @@ function q3q2($obj){
 }
 
 function q3q4($obj){
-    movimenta($obj, tops[0], rights[1]);
+    movimenta($obj, tops[0], rights[2]);
 }
 //FIM MOVIMENTOS Q3
+
 //MOVIMENTOS Q4
 function q4q2($obj){
-    movimenta($obj, tops[2], rights[1]);
-    movimenta($obj, tops[1], rights[1]);
+    movimenta($obj, tops[2], rights[2]);
     movimenta($obj, tops[1], rights[2]);
+    movimenta($obj, tops[1], rights[3]);
 }
 
 function q4q1($obj){
@@ -69,7 +70,7 @@ function q4q1($obj){
 }
 
 function q4q3($obj){
-    movimenta($obj, tops[0], rights[2]);
+    movimenta($obj, tops[0], rights[3]);
 }
 //FIM MOVIMENTOS Q4
 
