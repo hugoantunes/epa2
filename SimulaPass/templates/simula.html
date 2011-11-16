@@ -38,35 +38,35 @@
 
                 //origem em Q2
                 if(origem == 'q2' && destino == 'q1'){
-                    q1q2(transporte);
+                    q2q1(transporte);
                 }
                 if(origem == 'q2' && destino == 'q3'){
-                    q1q3(transporte); 
+                    q2q3(transporte); 
                 }
                 if(origem == 'q2' && destino == 'q4'){
-                    q1q4(transporte);
+                    q2q4(transporte);
                 }
 
                 //origem em Q3
                 if(origem == 'q3' && destino == 'q1'){
-                    q1q2(transporte);
+                    q3q1(transporte);
                 }
                 if(origem == 'q3' && destino == 'q2'){
-                    q1q3(transporte); 
+                    q3q2(transporte); 
                 }
                 if(origem == 'q3' && destino == 'q4'){
-                    q1q4(transporte);
+                    q3q4(transporte);
                 }
 
                 //origem em Q4
                 if(origem == 'q4' && destino == 'q1'){
-                    q1q2(transporte);
+                    q4q1(transporte);
                 }
                 if(origem == 'q4' && destino == 'q2'){
-                    q1q3(transporte); 
+                    q4q2(transporte); 
                 }
                 if(origem == 'q4' && destino == 'q3'){
-                    q1q4(transporte);
+                    q4q3(transporte);
                 }
             }
 
@@ -117,7 +117,6 @@
                                     $('#passageiros_alocados_q'+data['quadrante']+'').val(data['passageiros_alocados'])
                                     
                                     if(qtds_alocados==total_passageiros){
-                                        console.log(data)
                                         $.getJSON('/monta_mapa/transportes.json', function(data) { 
                                             for(i in data['transportes']){
                                                 posiciona_transportes(data['transportes'][i]);        

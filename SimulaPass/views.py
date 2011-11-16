@@ -62,8 +62,8 @@ def constroi_mundo(request,id_mundo):
     try:
         #simulação ja criada
         simulacao = simulacao[0]
-        simulacao.qtd_pessoas_usadas += len(simulacao.passageiros)
-        simulacao.qtd_transportes_usados = len(simulacao.transportes)
+        simulacao.qtd_pessoas_usadas += len(simulacao.passageiros.all())
+        simulacao.qtd_transportes_usados = len(simulacao.transportes.all())
         simulacao.qtd_carros_usados =  request.POST['num_carros_usados']
     except IndexError:
         #simulação nova
@@ -85,13 +85,29 @@ def constroi_mundo(request,id_mundo):
     total_passageiros_mega_evento = []
     total_transportes_geral = []
     
+    soma_total_transportes = 0
+    soma_total_passageiros_gerais = 0
+    soma_total_passageiros_mega_evento = 0
+    
     #monta lista aonde valor é o total de passageiros e indice é o quandrante
     for i in range(0,len(quadrantes)):
-        total_passageiros_geral.append(int(float(mundo.qtd_pessoas)*float(quadrantes[i].percentual_pessoas)/100))
-        total_transportes_geral.append(int(float(mundo.qtd_transportes)*float(quadrantes[i].percentual_transportes)/100))
-    
-        total_passageiros_mega_evento.append(int(float(mega_evento.qtd_pessoas_esperadas)*float(quadrantes[i].percentual_pessoas)/100))
+   
+        if soma_total_passageiros_gerais < int(mundo.qtd_pessoas):
+            numero_passageiros = float(mundo.qtd_pessoas)*float(quadrantes[i].percentual_pessoas)/100
+            total_passageiros_geral.append(int(numero_passageiros))
+            soma_total_passageiros_gerais += int(numero_passageiros) 
 
+        if soma_total_transportes < int(mundo.qtd_transportes):
+            numero_transportes = float(mundo.qtd_transportes)*float(quadrantes[i].percentual_transportes)/100
+            if numero_transportes > 0 and numero_transportes < 1:
+                numero_transportes = 1
+            total_transportes_geral.append(int(numero_transportes))
+            soma_total_transportes += int(numero_transportes)
+
+        if soma_total_passageiros_mega_evento < int(mega_evento.qtd_pessoas_esperadas):
+            numeros_passageiros_mega_evento = float(mega_evento.qtd_pessoas_esperadas)*float(quadrantes[i].percentual_pessoas)/100 
+            total_passageiros_mega_evento.append(int(numeros_passageiros_mega_evento))
+            soma_total_passageiros_mega_evento += int(numeros_passageiros_mega_evento)
 
     #traz lista de tipos de passageiros e transportes
     tipos_passageiros = Passageiro.objects.all()
@@ -100,7 +116,7 @@ def constroi_mundo(request,id_mundo):
     #cria todos os agentes de transporte por quadrantes
     for i in range(0, len(total_transportes_geral)):
         for j in range(0, total_transportes_geral[i]):
-            transporte = AgenteTransporte.objects.create(
+            AgenteTransporte.objects.create(
             tipo_transporte = random.choice(tipos_transportes),
             simulacao=simulacao,
             origem=quadrantes[i], 
@@ -201,8 +217,9 @@ def aloca_passageiros(request, id_passageiro):
                 #se ainda não entrou ele tenta ir em qualquer um dando preferencia pelos mais rapidos
                 if not passageiro.dentro_transporte: 
                     for transporte in transportes_possiveis:
-                       passageiro.entra_transporte(transporte)
-                       passageiro.simulacao.qtd_transportes_usados +=1
+                       if transporte.ha_vagas:
+                           passageiro.entra_transporte(transporte)
+                           passageiro.simulacao.qtd_transportes_usados +=1
 
     passageiro.simulacao.qtd_pessoas_usadas +=1
     passageiro.simulacao.save()
