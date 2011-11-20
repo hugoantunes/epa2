@@ -294,10 +294,10 @@ def monta_mapa(request):
         transportes_no_destino = transporte.simulacao.transportes.filter(origem=transporte.origem)
 
         if transporte.tipo_transporte.nome == "metro":
-            
             velocidade_origem = transporte.tipo_transporte.velocidade_confortavel
             velocidade_destino = transporte.tipo_transporte.velocidade_confortavel
-        
+            tempo_na_origem = percorrido_origem/velocidade_origem
+            tempo_no_destino = percorrido_destino/velocidade_destino
         else:
         
             if len(transportes_na_origem) <= int(transporte.origem.vazao_confortavel):
