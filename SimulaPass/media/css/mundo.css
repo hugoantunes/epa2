@@ -75,9 +75,9 @@ div.quarto{
 
 span.transporte{
     position:absolute;
-    border-radius: 18px;
-    width:10px;
-    height:10px;
+    border-radius: 30px;
+    width:15px;
+    height:15px;
     margin:0;
 }
 
@@ -87,12 +87,12 @@ span.q1{
 }
 
 span.q2{
-    right:840px;
-    top:15px;
+    right:825px;
+    top:7px;
 }
 
 span.q3{
-    right:840px;
+    right:825px;
     top:290px;
 }
 
@@ -102,11 +102,11 @@ span.q4{
 }
 
 .vazio{
-    background-color:#7CFC00;
+    background-color:#32CD32;
 }
 
 .moderado{
-    background-color:#FFFF00;
+    background-color:#FFA500;
 }
 
 .cheio{

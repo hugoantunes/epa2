@@ -40,6 +40,8 @@ class Simulacao(models.Model):
     qtd_pessoas_usadas = models.IntegerField(max_length=255)
     qtd_transportes_usados = models.IntegerField(max_length=255)
     qtd_carros_usados = models.IntegerField(max_length=255)
+    tempo_total = models.IntegerField(max_length=255)
+    conforto_total = models.IntegerField(max_length=255)
 
     def __unicode__(self):
         return 'Simulacao: %d' %self.id

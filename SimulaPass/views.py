@@ -8,7 +8,7 @@ from django.template import RequestContext
 
 from passageiros.models import Passageiro, AgentePassageiro
 from transportes.models import Transporte, AgenteTransporte
-from mundo.models import Mundo, Simulacao, Quadrante
+from mundo.models import Mundo, Simulacao, Quadrante, DistanciasQuadrante 
 from mega_evento.models import MegaEvento
 
 def index(request):
@@ -72,6 +72,8 @@ def constroi_mundo(request,id_mundo):
             qtd_pessoas_usadas=0,
             qtd_transportes_usados=0,
             qtd_carros_usados=0,
+            tempo_total = 0,
+            conforto_total = 100,
             )
     
     #seta quadrantes de acordo com post
@@ -80,7 +82,10 @@ def constroi_mundo(request,id_mundo):
         quadrante.percentual_pessoas = request.POST['percent_pes_q%d' %quadrante.id]
         quadrante.percentual_transportes = request.POST['percent_trans_q%d' %quadrante.id]
         quadrante.permite_carros = request.POST.get('permite_carro_q%d' %quadrante.id, False)
-   
+        quadrante.vazao_confortavel = request.POST['vazao_confortavel_q%d' %quadrante.id] 
+        quadrante.vazao_moderada = request.POST['vazao_moderada_q%d' %quadrante.id] 
+        quadrante.vazao_maxima = request.POST['vazao_maxima_q%d' %quadrante.id]
+
     total_passageiros_geral = []
     total_passageiros_mega_evento = []
     total_transportes_geral = []
@@ -151,9 +156,9 @@ def constroi_mundo(request,id_mundo):
             agentes_passageiros['id_passageiros'].append(passageiro.id)
        
     #######retornar o total de lugares em cada tipo de transporte por quadrante no json 
-    
+    random.shuffle(agentes_passageiros['id_passageiros'])
     json = simplejson.dumps(agentes_passageiros)
-        
+     
     return HttpResponse(json, mimetype = 'application/json')
 
 def aloca_passageiros(request, id_passageiro):
@@ -262,22 +267,101 @@ def aloca_passageiros(request, id_passageiro):
 
 def monta_mapa(request):
     json = {'transportes': []}
-    
-    transportes = AgenteTransporte.objects.filter(capacidade_atual__gt=0)
      
+    transportes = AgenteTransporte.objects.filter(capacidade_atual__gt=0)
+
     for transporte in transportes: 
+        
+        transporte.origem.vazao_confortavel = request.POST[u"vazao_confortavel_q%d"%transporte.origem.id]
+        transporte.origem.vazao_moderada = request.POST[u"vazao_moderada_q%d"%transporte.origem.id]
+        transporte.destino.vazao_confortavel = request.POST[u"vazao_confortavel_q%d"%transporte.destino.id]
+        transporte.destino.vazao_moderada = request.POST[u"vazao_moderada_q%d"%transporte.destino.id]
+
+        velocidade_origem = 0
+        velocidade_destino = 0
+        
+        if transporte.origem != transporte.destino:
+            distancia_percorrida = DistanciasQuadrante.objects.get(origem=transporte.origem, destino=transporte.destino)
+            distancia_percorrida.distancia = request.POST['distancia_q%d_q%d' % (transporte.origem.id, transporte.destino.id)]
+            percorrido_origem = float(distancia_percorrida.distancia)/2 
+            percorrido_destino = float(distancia_percorrida.distancia)/2
+        else:
+            percorrido_origem = 0  
+            percorrido_destino = 0 
+
+        
+        transportes_na_origem = transporte.simulacao.transportes.filter(origem=transporte.origem)
+        transportes_no_destino = transporte.simulacao.transportes.filter(origem=transporte.origem)
+
+        if transporte.tipo_transporte.nome == "metro":
+            
+            velocidade_origem = transporte.tipo_transporte.velocidade_confortavel
+            velocidade_destino = transporte.tipo_transporte.velocidade_confortavel
+        
+        else:
+        
+            if len(transportes_na_origem) <= int(transporte.origem.vazao_confortavel):
+                velocidade_origem = transporte.tipo_transporte.velocidade_confortavel
+            elif len(transportes_na_origem) <= int(transporte.origem.vazao_moderada):
+                velocidade_origem = transporte.tipo_transporte.velocidade_confortavel - transporte.tipo_transporte.velocidade_confortavel*0.5 
+                if int(transporte.desconforto) <= 95:
+                    transporte.desconforto += 5
+            else:
+                velocidade_origem = transporte.tipo_transporte.velocidade_confortavel - transporte.tipo_transporte.velocidade_confortavel*0.8 
+                if int(transporte.desconforto) <= 90:
+                    transporte.desconforto += 10
+        
+            tempo_na_origem = percorrido_origem/velocidade_origem
+            
+            if int(transporte.destino.vazao_confortavel) >= len(transportes_no_destino):
+                velocidade_destino = transporte.tipo_transporte.velocidade_confortavel
+            elif int(transporte.destino.vazao_moderada) >= len(transportes_no_destino):
+                velocidade_destino = transporte.tipo_transporte.velocidade_confortavel - transporte.tipo_transporte.velocidade_confortavel*0.5 
+                if int(transporte.desconforto) <= 95:
+                    transporte.desconforto += 5
+            else:
+                velocidade_destino = transporte.tipo_transporte.velocidade_confortavel - transporte.tipo_transporte.velocidade_confortavel*0.8 
+                if int(transporte.desconforto) <= 90:
+                    transporte.desconforto += 10
+
+            tempo_no_destino = percorrido_destino/velocidade_destino
+        
+        transporte.tempo_percurso = int((tempo_no_destino+tempo_na_origem))
+        transporte.save()
+
         json['transportes'].append({
             "id":transporte.id,
             "tipo_transporte":transporte.tipo_transporte.nome,
             "origem": "q%d" %transporte.origem.id,
+            "tempo_origem": tempo_na_origem,
             "destino":"q%d" %transporte.destino.id,
+            "tempo_destino": tempo_no_destino,
             "tempo": transporte.tipo_transporte.tempo_viagem,
             "status":transporte.status,
             })
+    
+    
+    transportes = AgenteTransporte.objects.filter(capacidade_atual__gt=0)
+    total_desconforto = 0
+    total_tempo = 0 
 
+    for transporte in transportes:
+        total_desconforto += transporte.desconforto 
+        total_tempo += transporte.tempo_percurso
+
+    numero_viagens = len(transportes)
+
+    simulacao = Simulacao.objects.all()[0]
+    simulacao.tempo_total = total_tempo/numero_viagens 
+    simulacao.conforto_total = 100 - total_desconforto/numero_viagens 
+
+    simulacao.save()
     json = simplejson.dumps(json)
     
     return HttpResponse(json, mimetype = 'application/json')
+
+
+
 
 '''
 #####################################################
@@ -288,6 +372,7 @@ def monta_mapa(request):
                                                     #
 #####################################################
 '''
+
 
 def home(request):
     template = u'index.html'

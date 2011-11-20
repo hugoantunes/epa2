@@ -10,6 +10,7 @@ function movimenta($obj, top, right, tempo){
     else
         $obj.animate({top:top,right:right}, tempo);
 }
+
 //MOVIMENTOS DE Q1
 function q1q3($obj){
     movimenta($obj, tops[1], rights[2], 5000);
@@ -54,7 +55,7 @@ function q3q2($obj){
 }
 
 function q3q4($obj){
-    movimenta($obj, tops[0], rights[2]);
+    movimenta($obj, tops[0], rights[1]);
 }
 //FIM MOVIMENTOS Q3
 

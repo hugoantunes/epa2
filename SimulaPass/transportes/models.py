@@ -35,6 +35,7 @@ class AgenteTransporte(models.Model, threading.Thread):
     destino = models.ForeignKey(Quadrante, related_name='destino_transporte', blank=True, null=True)
     simulacao = models.ForeignKey(Simulacao, related_name='transportes')
     desconforto = models.IntegerField()
+    tempo_percurso = models.IntegerField(blank=True, null=True) 
     capacidade_atual = models.IntegerField() 
     
     def __unicode__(self):

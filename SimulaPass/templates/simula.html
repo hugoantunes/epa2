@@ -17,56 +17,77 @@
         $(document).ready(function(){
             
             function posiciona_transportes(transporte){
-                console.log(transporte);
                 mapa = $('div.mundo');
                 mapa.append('<span id="'+transporte.id+'" class="transporte '+transporte.origem+' '+transporte.status+'" origem="'+transporte.origem+'" destino="'+transporte.destino+'"></span>');
             }
             function movimenta_transportes(transporte){
-                transporte = $('#'+transporte.id+'')
-                origem = transporte.attr('origem');
-                destino = transporte.attr('destino');
+                $transporte = $('#'+transporte.id+'')
+                origem = $transporte.attr('origem');
+                destino = $transporte.attr('destino');
                 //origem em Q1
                 if(origem == 'q1' && destino == 'q2'){
-                    q1q2(transporte);
+                    $transporte.animate({right:415},transporte.tempo_origem*100);
+                    $transporte.animate({right:825},transporte.tempo_destino*100);
                 }
                 if(origem == 'q1' && destino == 'q3'){
-                    q1q3(transporte); 
+                    $transporte.animate({top:145},transporte.tempo_origem*100);
+                    $transporte.animate({top:290},transporte.tempo_destino*100);
                 }
                 if(origem == 'q1' && destino == 'q4'){
-                    q1q4(transporte);
+                    $transporte.animate({right:415},transporte.tempo_origem*100);
+                    $transporte.animate({top:145},transporte.tempo_origem*100);
+                    $transporte.animate({top:290},transporte.tempo_destino*100);
+                    $transporte.animate({right:825},transporte.tempo_destino*100);
                 }
 
                 //origem em Q2
                 if(origem == 'q2' && destino == 'q1'){
-                    q2q1(transporte);
+                    $transporte.animate({right:415},transporte.tempo_origem*100);
+                    $transporte.animate({right:15},transporte.tempo_destino*100);
                 }
                 if(origem == 'q2' && destino == 'q3'){
-                    q2q3(transporte); 
+                    $transporte.animate({top:145},transporte.tempo_origem*100);
+                    $transporte.animate({top:290},transporte.tempo_destino*100);
                 }
                 if(origem == 'q2' && destino == 'q4'){
-                    q2q4(transporte);
+                    $transporte.animate({right:415},transporte.tempo_origem*100);
+                    $transporte.animate({top:145},transporte.tempo_origem*100);
+                    $transporte.animate({top:290},transporte.tempo_destino*100);
+                    $transporte.animate({right:15},transporte.tempo_destino*100);
                 }
 
                 //origem em Q3
                 if(origem == 'q3' && destino == 'q1'){
-                    q3q1(transporte);
+                    $transporte.animate({right:415},transporte.tempo_origem*100);
+                    $transporte.animate({top:145},transporte.tempo_origem*100);
+                    $transporte.animate({top:7},transporte.tempo_destino*100);
+                    $transporte.animate({right:15},transporte.tempo_destino*100);
                 }
                 if(origem == 'q3' && destino == 'q2'){
-                    q3q2(transporte); 
+                    $transporte.animate({top:145},transporte.tempo_origem*100);
+                    $transporte.animate({top:7},transporte.tempo_destino*100);
+
                 }
                 if(origem == 'q3' && destino == 'q4'){
-                    q3q4(transporte);
+                    $transporte.animate({right:415},transporte.tempo_origem*100);
+                    $transporte.animate({right:15},transporte.tempo_destino*100);
                 }
 
                 //origem em Q4
                 if(origem == 'q4' && destino == 'q1'){
-                    q4q1(transporte);
+                    $transporte.animate({top:145},transporte.tempo_origem*100);
+                    $transporte.animate({top:7},transporte.tempo_destino*100);
                 }
                 if(origem == 'q4' && destino == 'q2'){
-                    q4q2(transporte); 
+                    $transporte.animate({right:415},transporte.tempo_origem*100);
+                    $transporte.animate({top:145},transporte.tempo_origem*100);
+                    $transporte.animate({top:7},transporte.tempo_destino*100);
+                    $transporte.animate({right:825},transporte.tempo_destino*100);
+ 
                 }
                 if(origem == 'q4' && destino == 'q3'){
-                    q4q3(transporte);
+                    $transporte.animate({right:415},transporte.tempo_origem*100);
+                    $transporte.animate({right:825},transporte.tempo_destino*100);
                 }
             }
 
@@ -96,7 +117,8 @@
                         //alocação do passageiros nos transportes
                         var qtds_alocados = 0;
                         total_passageiros =  data['id_passageiros'].length;
-                        
+                        // ver se tem como embaralhar vetor em jquery
+
                         for (id in data['id_passageiros']){    
                             $.ajax({
                                 type:'POST',
@@ -117,19 +139,24 @@
                                     $('#passageiros_alocados_q'+data['quadrante']+'').val(data['passageiros_alocados'])
                                     
                                     if(qtds_alocados==total_passageiros){
-                                        $.getJSON('/monta_mapa/transportes.json', function(data) { 
-                                            for(i in data['transportes']){
-                                                posiciona_transportes(data['transportes'][i]);        
+                                        $.ajax({
+                                            type:'POST',
+                                            data: $("#my_form").serialize(),
+                                            url: '/monta_mapa/transportes.json',
+                                            success: function(data) {
+                                                console.log(data)
+                                                for(i in data['transportes']){
+                                                    posiciona_transportes(data['transportes'][i]);        
+                                                }
+                                                for(i in data['transportes']){
+                                                    movimenta_transportes(data['transportes'][i]);        
+                                                } 
                                             }
-                                            for(i in data['transportes']){
-                                                movimenta_transportes(data['transportes'][i]);        
-                                            } 
                                         });
                                     }
                                 }
                             });
                         }
-
                     }
                 });
             });
