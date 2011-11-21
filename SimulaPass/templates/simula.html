@@ -15,7 +15,6 @@
     
     <script>
         $(document).ready(function(){
-            
             function posiciona_transportes(transporte){
                 mapa = $('div.mundo');
                 mapa.append('<span id="'+transporte.id+'" class="transporte '+transporte.origem+' '+transporte.status+'" origem="'+transporte.origem+'" destino="'+transporte.destino+'"></span>');
@@ -91,24 +90,9 @@
                 }
             }
 
-            var teste;
-            {% for quadrante in quadrantes %}
-                qtd_passageiros_desalocados_q{{quadrante.id}} = $('#passageiros_desalocados_q{{quadrante.id}}').val(); 
-                qtd_passageiros_alocados_q{{quadrante.id}} = $('#passageiros_alocados_q{{quadrante.id}}').val(); 
-                qtd_carros_disponiveis = $('#num_carros').val();
-            {% endfor %}
-
-            {% for transporte in transportes %}
-                transporte_modelo_{{transporte.id}} = new Transporte()
-                transporte_modelo_{{transporte.id}}.tipo = "{{ transporte.nome }}"
-                transporte_modelo_{{transporte.id}}.tempo = {{ transporte.tempo_viagem }}
-                transporte_modelo_{{transporte.id}}.capacidade_maxima = {{ transporte.capacidade_maxima }}
-                transporte_modelo_{{transporte.id}}.capacidade_atual = {{ transporte.capacidade_atual }}
-                transporte_modelo_{{transporte.id}}.capacidade_confortavel = {{ transporte.capacidade_confortavel }}
-            {% endfor %} 
-
             $("#simular").click(function(){
                 //primeiro ajax que monta simulação, cria agentes
+                var resultado;
                 $.ajax({
                     type:'POST',
                     data: $("#my_form").serialize(),
@@ -118,7 +102,7 @@
                         var qtds_alocados = 0;
                         total_passageiros =  data['id_passageiros'].length;
                         // ver se tem como embaralhar vetor em jquery
-
+        
                         for (id in data['id_passageiros']){    
                             $.ajax({
                                 type:'POST',
@@ -144,13 +128,16 @@
                                             data: $("#my_form").serialize(),
                                             url: '/monta_mapa/transportes.json',
                                             success: function(data) {
-                                                console.log(data)
+                                                var transportes_alocados = 0;
+                                                total_passageiros =  data['transportes'].length;
+
                                                 for(i in data['transportes']){
                                                     posiciona_transportes(data['transportes'][i]);        
                                                 }
                                                 for(i in data['transportes']){
                                                     movimenta_transportes(data['transportes'][i]);        
-                                                } 
+                                                }
+                                                $("#valor").text(data['resultado']);
                                             }
                                         });
                                     }
@@ -208,8 +195,6 @@
     {% include "transporte_passageiros.html" %}
     
     {% include "transporte_transportes.html" %}
-    </form>
-
 </body>
 
 </html>

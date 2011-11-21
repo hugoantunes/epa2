@@ -266,7 +266,7 @@ def aloca_passageiros(request, id_passageiro):
     return HttpResponse(json, mimetype = 'application/json')
 
 def monta_mapa(request):
-    json = {'transportes': []}
+    json = {'transportes': [], 'resultado':''}
      
     transportes = AgenteTransporte.objects.filter(capacidade_atual__gt=0)
 
@@ -356,6 +356,14 @@ def monta_mapa(request):
     simulacao.conforto_total = 100 - total_desconforto/numero_viagens 
 
     simulacao.save()
+    
+    from suds.client import Client
+    url = 'http://localhost:8080/AvaliadorFuzzyWeb/AvaliadorFuzzyWS?wsdl'
+
+    client = Client(url)
+    resultado =  client.service.avaliarCondicaoTransito(simulacao.tempo_total,simulacao.conforto_total)
+    json['resultado'] = resultado 
+
     json = simplejson.dumps(json)
     
     return HttpResponse(json, mimetype = 'application/json')

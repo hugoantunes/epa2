@@ -70,3 +70,10 @@ fieldset.info-quadrante{
     margin:5px;
 }
 
+.simulacao h3{
+    display:inline-block;
+}
+
+.simulacao h3:first-child{
+    margin-right: 655px;
+}

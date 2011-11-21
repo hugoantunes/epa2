@@ -111,4 +111,20 @@ span.q4{
 
 .cheio{
     background-color:#FF0000;  
+}
 
+div.simulacao div#resultado{
+    border: solid 1px black;
+    border-radius: 24px;
+    margin:10px;
+    height: 306px;
+    width:357px;
+    float:right;
+    position:relative;
+}
+
+div.simulacao div#resultado strong{
+    display: inline-block;
+    margin: 15% 15%;
+    font-size: 200px;
+}
