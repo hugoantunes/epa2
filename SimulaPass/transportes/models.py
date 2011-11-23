@@ -5,7 +5,7 @@ from django.db import models
 
 from mundo.models import Quadrante, Simulacao
 
-class Transporte(models.Model, threading.Thread):
+class PerfilTransporte(models.Model, threading.Thread):
     nome =  models.CharField(max_length=90)
     velocidade_confortavel = models.FloatField()
     tempo_viagem = models.FloatField()
@@ -27,10 +27,10 @@ class Transporte(models.Model, threading.Thread):
 
     @classmethod
     def todos(cls):
-        return Transporte.objects.all().exclude(nome='carro')
+        return PerfilTransporte.objects.all().exclude(nome='carro')
 
 class AgenteTransporte(models.Model, threading.Thread):
-    tipo_transporte = models.ForeignKey(Transporte, related_name='agente_transporte')
+    tipo_transporte = models.ForeignKey(PerfilTransporte, related_name='agente_transporte')
     origem = models.ForeignKey(Quadrante, related_name='origem_transporte', blank=True, null=True)
     destino = models.ForeignKey(Quadrante, related_name='destino_transporte', blank=True, null=True)
     simulacao = models.ForeignKey(Simulacao, related_name='transportes')

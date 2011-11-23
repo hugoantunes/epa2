@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from transportes.models import Transporte
+from transportes.models import PerfilTransporte
 from django.contrib import admin
 
 class TransporteAdmin(admin.ModelAdmin):
@@ -8,4 +8,4 @@ class TransporteAdmin(admin.ModelAdmin):
 	list_filter = ['capacidade_confortavel']
 	search_fields = ['nome']
 	
-admin.site.register(Transporte, TransporteAdmin)
+admin.site.register(PerfilTransporte, TransporteAdmin)

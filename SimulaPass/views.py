@@ -6,8 +6,8 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
 
-from passageiros.models import Passageiro, AgentePassageiro
-from transportes.models import Transporte, AgenteTransporte
+from passageiros.models import PerfilPassageiro, AgentePassageiro
+from transportes.models import PerfilTransporte, AgenteTransporte
 from mundo.models import Mundo, Simulacao, Quadrante, DistanciasQuadrante 
 from mega_evento.models import MegaEvento
 
@@ -18,8 +18,8 @@ def index(request):
 
     template = u'simula.html'
     
-    passageiros = Passageiro.objects.all()
-    transportes = Transporte.todos()
+    passageiros = PerfilPassageiro.objects.all()
+    transportes = PerfilTransporte.todos()
     mundo = Mundo.objects.all()[0]
     mega_evento = qtd_pessoas_esperadas = None
 
@@ -115,8 +115,8 @@ def constroi_mundo(request,id_mundo):
             soma_total_passageiros_mega_evento += int(numeros_passageiros_mega_evento)
 
     #traz lista de tipos de passageiros e transportes
-    tipos_passageiros = Passageiro.objects.all()
-    tipos_transportes = Transporte.todos()
+    tipos_passageiros = PerfilPassageiro.objects.all()
+    tipos_transportes = PerfilTransporte.todos()
 
     #cria todos os agentes de transporte por quadrantes
     for i in range(0, len(total_transportes_geral)):
@@ -163,11 +163,12 @@ def constroi_mundo(request,id_mundo):
 
 def aloca_passageiros(request, id_passageiro):
     #obtem passageiro que vai ser alocado
+    
     passageiro = AgentePassageiro.objects.get(id=id_passageiro)
     tem_carro = [True, False] 
 
     #obtem lista de transportes
-    carro = Transporte.objects.get(nome='carro')
+    carro = PerfilTransporte.objects.get(nome='carro')
     transportes = AgenteTransporte.objects.filter(origem=passageiro.origem, destino=passageiro.destino).exclude(tipo_transporte=carro)
 
     #Possui carro ?
@@ -183,7 +184,7 @@ def aloca_passageiros(request, id_passageiro):
         passageiro.simulacao.mundo.permite_carros=False
 
     #escolhe tipo de transporte
-    tipo_transporte_escolhido = random.choice(Transporte.todos())
+    tipo_transporte_escolhido = random.choice(PerfilTransporte.todos())
     #Se ainda há carros disponiveis no mundo
     
     #Se tipo do passageiro permite carro e quandrante permite carro
@@ -352,7 +353,7 @@ def monta_mapa(request):
     numero_viagens = len(transportes)
 
     simulacao = Simulacao.objects.all()[0]
-    simulacao.tempo_total = total_tempo/numero_viagens 
+    simulacao.tempo_total = (total_tempo/numero_viagens)/60
     simulacao.conforto_total = 100 - total_desconforto/numero_viagens 
 
     simulacao.save()
@@ -385,8 +386,8 @@ def monta_mapa(request):
 def home(request):
     template = u'index.html'
     
-    passageiros = Passageiro.objects.all()
-    transportes = Transporte.todos()
+    passageiros = PerfilPassageiro.objects.all()
+    transportes = PerfilTransporte.todos()
     
     json_passageiros = {'passageiros':[]}
 
@@ -405,8 +406,8 @@ def home(request):
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def ajax(request, numero):
-    passageiros = Passageiro.objects.all()
-    transportes = Transporte.todos().order_by('tempo_viagem')
+    passageiros = PerfilPassageiro.objects.all()
+    transportes = PerfilTransporte.todos().order_by('tempo_viagem')
     possibilidades_passageiros = len(passageiros)
     
     json={'passageiros':[]}
@@ -414,8 +415,8 @@ def ajax(request, numero):
     for i in range(int(numero)):
         embarcou = 0
         lista_transportes = []
-        passageiro_modelo = Passageiro()
-        transporte_modelo = Transporte()
+        passageiro_modelo = PerfilPassageiro()
+        transporte_modelo = PerfilTransporte()
         
         if possibilidades_passageiros > 0:
             indice = random.randint(0,possibilidades_passageiros-1)

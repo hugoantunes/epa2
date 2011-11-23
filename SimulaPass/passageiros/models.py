@@ -3,10 +3,10 @@ import threading
 
 from django.db import models
 
-from transportes.models import AgenteTransporte, Transporte
+from transportes.models import AgenteTransporte, PerfilTransporte
 from mundo.models import Simulacao, Quadrante
 
-class Passageiro(models.Model):
+class PerfilPassageiro(models.Model):
     nome =  models.CharField(max_length=90)
     tem_carro =  models.BooleanField()
     conforto_toleravel = models.IntegerField()
@@ -15,7 +15,7 @@ class Passageiro(models.Model):
         return self.nome
 
 class AgentePassageiro(models.Model, threading.Thread):
-    tipo_passageiro = models.ForeignKey(Passageiro, related_name='agente_passageiro')
+    tipo_passageiro = models.ForeignKey(PerfilPassageiro, related_name='agente_passageiro')
     transporte = models.ForeignKey(AgenteTransporte, related_name='passageiros', blank=True, null=True)
     tem_carro = models.BooleanField()
     conforto_atual = models.IntegerField() #matar esse campo
@@ -33,7 +33,7 @@ class AgentePassageiro(models.Model, threading.Thread):
         return False
 
     def entra_carro(self):
-        tipo_carro = Transporte.objects.get(nome='carro')
+        tipo_carro = PerfilTransporte.objects.get(nome='carro')
         carro = AgenteTransporte.objects.create(
             tipo_transporte = tipo_carro,
             simulacao=self.simulacao,

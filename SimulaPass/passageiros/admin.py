@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from passageiros.models import Passageiro
+from passageiros.models import PerfilPassageiro
 from django.contrib import admin
 
 class PassageiroAdmin(admin.ModelAdmin):
@@ -8,4 +8,4 @@ class PassageiroAdmin(admin.ModelAdmin):
 	list_filter = ['tem_carro']
 	search_fields = ['nome']
 	
-admin.site.register(Passageiro, PassageiroAdmin)
+admin.site.register(PerfilPassageiro, PassageiroAdmin)
