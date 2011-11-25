@@ -20,73 +20,74 @@
                 mapa.append('<span id="'+transporte.id+'" class="transporte '+transporte.origem+' '+transporte.status+'" origem="'+transporte.origem+'" destino="'+transporte.destino+'"></span>');
             }
             function movimenta_transportes(transporte){
+                multiplicador = 10;
                 $transporte = $('#'+transporte.id+'')
                 origem = $transporte.attr('origem');
                 destino = $transporte.attr('destino');
                 //origem em Q1
                 if(origem == 'q1' && destino == 'q2'){
-                    $transporte.animate({right:415},transporte.tempo_origem*100);
-                    $transporte.animate({right:825},transporte.tempo_destino*100);
+                    $transporte.animate({right:415},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({right:825},transporte.tempo_destino*multiplicador);
                 }
                 if(origem == 'q1' && destino == 'q3'){
-                    $transporte.animate({top:145},transporte.tempo_origem*100);
-                    $transporte.animate({top:290},transporte.tempo_destino*100);
+                    $transporte.animate({top:145},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:290},transporte.tempo_destino*multiplicador);
                 }
                 if(origem == 'q1' && destino == 'q4'){
-                    $transporte.animate({right:415},transporte.tempo_origem*100);
-                    $transporte.animate({top:145},transporte.tempo_origem*100);
-                    $transporte.animate({top:290},transporte.tempo_destino*100);
-                    $transporte.animate({right:825},transporte.tempo_destino*100);
+                    $transporte.animate({right:415},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:145},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:290},transporte.tempo_destino*multiplicador);
+                    $transporte.animate({right:825},transporte.tempo_destino*multiplicador);
                 }
 
                 //origem em Q2
                 if(origem == 'q2' && destino == 'q1'){
-                    $transporte.animate({right:415},transporte.tempo_origem*100);
-                    $transporte.animate({right:15},transporte.tempo_destino*100);
+                    $transporte.animate({right:415},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({right:15},transporte.tempo_destino*multiplicador);
                 }
                 if(origem == 'q2' && destino == 'q3'){
-                    $transporte.animate({top:145},transporte.tempo_origem*100);
-                    $transporte.animate({top:290},transporte.tempo_destino*100);
+                    $transporte.animate({top:145},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:290},transporte.tempo_destino*multiplicador);
                 }
                 if(origem == 'q2' && destino == 'q4'){
-                    $transporte.animate({right:415},transporte.tempo_origem*100);
-                    $transporte.animate({top:145},transporte.tempo_origem*100);
-                    $transporte.animate({top:290},transporte.tempo_destino*100);
-                    $transporte.animate({right:15},transporte.tempo_destino*100);
+                    $transporte.animate({right:415},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:145},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:290},transporte.tempo_destino*multiplicador);
+                    $transporte.animate({right:15},transporte.tempo_destino*multiplicador);
                 }
 
                 //origem em Q3
                 if(origem == 'q3' && destino == 'q1'){
-                    $transporte.animate({right:415},transporte.tempo_origem*100);
-                    $transporte.animate({top:145},transporte.tempo_origem*100);
-                    $transporte.animate({top:7},transporte.tempo_destino*100);
-                    $transporte.animate({right:15},transporte.tempo_destino*100);
+                    $transporte.animate({right:415},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:145},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:7},transporte.tempo_destino*multiplicador);
+                    $transporte.animate({right:15},transporte.tempo_destino*multiplicador);
                 }
                 if(origem == 'q3' && destino == 'q2'){
-                    $transporte.animate({top:145},transporte.tempo_origem*100);
-                    $transporte.animate({top:7},transporte.tempo_destino*100);
+                    $transporte.animate({top:145},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:7},transporte.tempo_destino*multiplicador);
 
                 }
                 if(origem == 'q3' && destino == 'q4'){
-                    $transporte.animate({right:415},transporte.tempo_origem*100);
-                    $transporte.animate({right:15},transporte.tempo_destino*100);
+                    $transporte.animate({right:415},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({right:15},transporte.tempo_destino*multiplicador);
                 }
 
                 //origem em Q4
                 if(origem == 'q4' && destino == 'q1'){
-                    $transporte.animate({top:145},transporte.tempo_origem*100);
-                    $transporte.animate({top:7},transporte.tempo_destino*100);
+                    $transporte.animate({top:145},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:7},transporte.tempo_destino*multiplicador);
                 }
                 if(origem == 'q4' && destino == 'q2'){
-                    $transporte.animate({right:415},transporte.tempo_origem*100);
-                    $transporte.animate({top:145},transporte.tempo_origem*100);
-                    $transporte.animate({top:7},transporte.tempo_destino*100);
-                    $transporte.animate({right:825},transporte.tempo_destino*100);
+                    $transporte.animate({right:415},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:145},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({top:7},transporte.tempo_destino*multiplicador);
+                    $transporte.animate({right:825},transporte.tempo_destino*multiplicador);
  
                 }
                 if(origem == 'q4' && destino == 'q3'){
-                    $transporte.animate({right:415},transporte.tempo_origem*100);
-                    $transporte.animate({right:825},transporte.tempo_destino*100);
+                    $transporte.animate({right:415},transporte.tempo_origem*multiplicador);
+                    $transporte.animate({right:825},transporte.tempo_destino*multiplicador);
                 }
             }
 
